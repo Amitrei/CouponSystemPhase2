@@ -1,6 +1,7 @@
 package com.amitrei.couponsystemv2.beans;
 
 import com.amitrei.couponsystemv2.repositories.CompanyRepo;
+import com.amitrei.couponsystemv2.repositories.CouponRepo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,7 +18,6 @@ import java.util.Set;
 
 @Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(exclude="customers")
 
@@ -26,6 +26,12 @@ public class Coupon {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+
+
+    @Transient
+    @Autowired
+    private CouponRepo couponRepo;
 
 
     @ManyToOne()
@@ -63,12 +69,7 @@ public class Coupon {
 
     public void setId(int id) {
 
-
-        if (this.id == 0) {
-            this.id = id;
-        } else {
-            System.out.println("Cannot change coupon Id");
-        }
+        System.out.println("CANNOT CHANGE ID");
 
     }
 

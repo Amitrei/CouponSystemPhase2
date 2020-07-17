@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Data
 public class CompanyService extends ClientServices {
 
     private int companyId;
@@ -37,6 +36,7 @@ public class CompanyService extends ClientServices {
 
 
         this.currentCompany = company;
+        company=null;
         this.companyId = currentCompany.getId();
         return true;
 

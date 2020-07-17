@@ -6,6 +6,7 @@ import com.amitrei.couponsystemv2.repositories.CouponRepo;
 import com.amitrei.couponsystemv2.repositories.CustomerRepo;
 import com.amitrei.couponsystemv2.services.AdminService;
 import com.amitrei.couponsystemv2.services.CompanyService;
+import com.amitrei.couponsystemv2.services.CustomerService;
 import com.amitrei.couponsystemv2.utils.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -32,6 +33,10 @@ public class test implements CommandLineRunner {
 
 
     @Autowired
+    private CustomerService customerService;
+
+
+    @Autowired
     private DateUtil dateUtil;
 
 
@@ -50,7 +55,7 @@ public class test implements CommandLineRunner {
         customer2.setFirstName("moshe");
         customer2.setLastName("xxx");
         customer2.setPassword("1234");
-        customer2.setEmail("amit@gmail.com");
+        customer2.setEmail("amitxxxx@gmail.com");
 
 
         Company company = new Company();
@@ -67,10 +72,12 @@ public class test implements CommandLineRunner {
 
 
         companyRepo.saveAndFlush(company);
+
+
         Coupon coupon = new Coupon();
-        coupon.setAmount(100);
+        coupon.setId(12421);
         coupon.setDescription("asfasf");
-        coupon.setAmount(30);
+        coupon.setAmount(100);
         coupon.setImage("asfsa");
         coupon.setPrice(15);
         coupon.setEnd_date(dateUtil.expiredDateFromToday(10));
@@ -93,14 +100,16 @@ public class test implements CommandLineRunner {
         coupon2.setCategoryId(Category.SPORT);
 
 
-
-
-
-
-        System.out.println(companyService.login("aasfsa@gmail.com","12434"));
+        companyService.login("aasfsa@gmail.com","12434");
         companyService.addCoupon(coupon);
         companyService.addCoupon(coupon2);
-        System.out.println(companyService.getCompanyCoupons(100));
+        customerRepo.save(customer);
+        customerService.login("amit@gmail.com","1234");
+        customerService.purchaseCoupon(coupon);
+        customerService.purchaseCoupon(coupon2);
+
+
+
 
 
 

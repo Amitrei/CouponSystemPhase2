@@ -10,8 +10,8 @@ import java.util.List;
 
 @Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class Company {
 
     @Id
@@ -39,5 +39,7 @@ public class Company {
             System.out.println("Cannot change company Id");
         }
     }
+
+
 
 }
