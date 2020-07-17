@@ -29,4 +29,15 @@ public class Company {
     @OneToMany(mappedBy = "company",cascade = CascadeType.REMOVE,fetch = FetchType.EAGER)
     private List<Coupon> coupons=new ArrayList<>();
 
+
+
+    public void setId(int id) {
+        if(this.id==0) {
+            this.id=id;
+        }
+        else{
+            System.out.println("Cannot change company Id");
+        }
+    }
+
 }

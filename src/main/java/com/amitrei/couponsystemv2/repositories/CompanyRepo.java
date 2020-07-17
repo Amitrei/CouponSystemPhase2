@@ -12,6 +12,8 @@ public interface CompanyRepo extends JpaRepository<Company, Integer> {
     int isCompanyExists(@Param("email") String email, @Param("password") String password);
 
 
+    boolean existsByEmail(String email);
+
     Company findByEmail(String email);
 
     @Query("SELECT c.id FROM Company c where c.name=:companyName")

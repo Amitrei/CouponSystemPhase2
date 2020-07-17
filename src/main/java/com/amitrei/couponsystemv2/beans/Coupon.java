@@ -1,9 +1,12 @@
 package com.amitrei.couponsystemv2.beans;
 
+import com.amitrei.couponsystemv2.repositories.CompanyRepo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -34,10 +37,11 @@ public class Coupon {
 
 
 
+
+
 //
-//    @Column(nullable = false)
-//    @Enumerated()
-//    private Category categoryId;
+    @Column(nullable = false)
+    private Category categoryId;
 
 
     @Column(nullable = false)
@@ -56,12 +60,26 @@ public class Coupon {
     private String image;
 
 
+
+    public void setId(int id) {
+
+
+        if (this.id == 0) {
+            this.id = id;
+        } else {
+            System.out.println("Cannot change coupon Id");
+        }
+
+    }
+
+
     @Override
     public String toString() {
         return "Coupon{" +
                 "id=" + id +
                 ", company=" + company.getId() +
                 ", title='" + title + '\'' +
+                ", Category : " + categoryId.toString() +
                 ", description='" + description + '\'' +
                 ", start_date=" + start_date +
                 ", end_date=" + end_date +

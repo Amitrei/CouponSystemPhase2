@@ -135,11 +135,9 @@ public class AdminService extends ClientServices {
     }
 
 
-
     public Customer getOneCustomer(int customerId) {
         return customerRepo.getOne(1);
     }
-
 
 
 }
