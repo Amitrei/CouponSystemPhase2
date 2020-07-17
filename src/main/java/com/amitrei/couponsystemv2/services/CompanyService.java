@@ -70,7 +70,7 @@ public class CompanyService extends ClientServices {
 
 
         // ** Comparing companies id's between coupon in DB and the new coupon ** //
-        int CompanyOfCoupon = couponRepo.getOne(coupon.getId()).getId();
+        int CompanyOfCoupon = couponRepo.getOne(coupon.getId()).getCompany().getId();
         if (CompanyOfCoupon != coupon.getCompany().getId()) {
             System.out.println("CANNOT CHANGE COMPANY EXCEPTION");
             return;

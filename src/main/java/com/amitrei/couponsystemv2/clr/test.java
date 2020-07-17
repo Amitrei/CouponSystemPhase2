@@ -7,6 +7,7 @@ import com.amitrei.couponsystemv2.repositories.CustomerRepo;
 import com.amitrei.couponsystemv2.services.AdminService;
 import com.amitrei.couponsystemv2.services.CompanyService;
 import com.amitrei.couponsystemv2.services.CustomerService;
+import com.amitrei.couponsystemv2.utils.CouponExpirationDailyJob;
 import com.amitrei.couponsystemv2.utils.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -39,6 +40,8 @@ public class test implements CommandLineRunner {
     @Autowired
     private DateUtil dateUtil;
 
+    @Autowired
+    private CouponExpirationDailyJob couponExpirationDailyJob;
 
     @Override
     public void run(String... args) throws Exception {
@@ -107,6 +110,16 @@ public class test implements CommandLineRunner {
         customerService.login("amit@gmail.com","1234");
         customerService.purchaseCoupon(coupon);
         customerService.purchaseCoupon(coupon2);
+
+        coupon2.setEnd_date(dateUtil.expiredDateFromToday(-1));
+        companyService.updateCoupon(coupon2);
+        Thread t1 = new Thread(couponExpirationDailyJob);
+        t1.start();
+
+
+
+
+
 
 
 
