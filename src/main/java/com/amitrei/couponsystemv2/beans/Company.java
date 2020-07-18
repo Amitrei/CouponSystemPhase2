@@ -1,9 +1,7 @@
 package com.amitrei.couponsystemv2.beans;
 
 import com.amitrei.couponsystemv2.Exceptions.IllegalActionException;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -12,7 +10,8 @@ import java.util.List;
 @Entity
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
 public class Company {
 
     @Id

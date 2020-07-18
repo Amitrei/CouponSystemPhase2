@@ -108,7 +108,7 @@ public class CompanyService extends ClientServices {
     public List<Coupon> getCompanyCoupons(Category category) {
 
         List<Coupon> listByCategory = currentCompany.getCoupons().stream()
-                .filter(coupon -> category.ordinal() == coupon.getCategoryId().ordinal())
+                .filter(coupon -> category.ordinal() == coupon.getCategory().ordinal())
                 .collect(Collectors.toList());
         return listByCategory;
     }

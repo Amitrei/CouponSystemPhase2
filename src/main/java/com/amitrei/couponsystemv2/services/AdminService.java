@@ -36,9 +36,17 @@ public class AdminService extends ClientServices {
     public void addCompany(Company company) throws AlreadyExistsException {
 
         for (Company comp : companyRepo.findAll()) {
-            if (comp.getName().equals(company.getName()) || comp.getEmail().equals(company.getEmail()))
+
+            if (comp.getName().equals(company.getName())) {
                 throw new AlreadyExistsException("company name");
+            }
+
+            else if (comp.getEmail().equals(company.getEmail())) {
+                throw new AlreadyExistsException("company email");
+
+            }
         }
+
 
         companyRepo.save(company);
 
@@ -63,7 +71,6 @@ public class AdminService extends ClientServices {
     public void deleteCompany(int companyID) throws DoesNotExistsException {
 
         if (!companyRepo.existsById(companyID)) throw new DoesNotExistsException("company");
-
 
 
         Company thisCompany = companyRepo.getOne(companyID);

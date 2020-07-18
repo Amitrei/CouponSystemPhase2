@@ -71,7 +71,7 @@ public class CustomerService extends ClientServices {
     public Set<Coupon> getCustomerCoupons(Category category) {
 
         Set<Coupon> filteredSet = currentCustomer.getCoupons().stream()
-                .filter(coupon -> category.ordinal() == coupon.getCategoryId().ordinal())
+                .filter(coupon -> category.ordinal() == coupon.getCategory().ordinal())
                 .collect(Collectors.toSet());
         return filteredSet;
     }

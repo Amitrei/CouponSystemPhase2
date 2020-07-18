@@ -1,28 +1,22 @@
 package com.amitrei.couponsystemv2.beans;
 
 import com.amitrei.couponsystemv2.Exceptions.IllegalActionException;
-import com.amitrei.couponsystemv2.repositories.CompanyRepo;
-import com.amitrei.couponsystemv2.repositories.CouponRepo;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
+import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
 @EqualsAndHashCode(exclude="customers")
 
 public class Coupon {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,17 +26,15 @@ public class Coupon {
     @ManyToOne()
     private Company company;
 
-//
+
     @ManyToMany(mappedBy = "coupons")
     Set<Customer> customers = new HashSet<>();
 
 
 
 
-
-//
-    @Column(nullable = false)
-    private Category categoryId;
+    @Column(nullable = false,name = "category_id")
+    private Category category;
 
 
     @Column(nullable = false)
@@ -73,7 +65,7 @@ public class Coupon {
                 "id=" + id +
                 ", company=" + company.getId() +
                 ", title='" + title + '\'' +
-                ", Category : " + categoryId.toString() +
+                ", Category : " + category.toString() +
                 ", description='" + description + '\'' +
                 ", start_date=" + start_date +
                 ", end_date=" + end_date +
