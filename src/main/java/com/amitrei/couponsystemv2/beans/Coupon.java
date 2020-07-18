@@ -72,6 +72,7 @@ public class Coupon {
                 ", amount=" + amount +
                 ", price=" + price +
                 ", image='" + image + '\'' +
+//                "customers= " + customers +
                 '}';
     }
 

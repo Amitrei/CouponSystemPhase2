@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface CouponRepo extends JpaRepository<Coupon,Integer> {
 
@@ -20,6 +21,9 @@ public interface CouponRepo extends JpaRepository<Coupon,Integer> {
     List<Coupon> findAllByCompanyId(int companyID);
 
     @Query(value = "SELECT * FROM customer_coupons WHERE coupon_id=:couponId", nativeQuery = true)
-    List<Integer> allCustomersOfCoupon(@Param("couponId") int couponId);
+    List<Integer> allCouponsPurchases(@Param("couponId") int couponId);
+
+    @Query(value = "SELECT * FROM customer_vs_coupons",nativeQuery = true)
+    Map<Integer,Integer> allPurchases();
 
 }

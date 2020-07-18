@@ -2,10 +2,7 @@ package com.amitrei.couponsystemv2.beans;
 
 
 import com.amitrei.couponsystemv2.Exceptions.IllegalActionException;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.*;
@@ -13,6 +10,9 @@ import java.util.*;
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
+
 
 public class Customer {
 
@@ -33,7 +33,7 @@ public class Customer {
     private String password;
 
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany()
     @JoinTable(name = "customer_vs_coupons")
     private Set<Coupon> coupons = new HashSet<>();
 
