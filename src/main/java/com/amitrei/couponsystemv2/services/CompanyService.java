@@ -1,11 +1,13 @@
 package com.amitrei.couponsystemv2.services;
 
 
+import com.amitrei.couponsystemv2.Exceptions.AlreadyExistsException;
+import com.amitrei.couponsystemv2.Exceptions.IllegalActionException;
 import com.amitrei.couponsystemv2.beans.Category;
 import com.amitrei.couponsystemv2.beans.Company;
 import com.amitrei.couponsystemv2.beans.Coupon;
 import com.amitrei.couponsystemv2.beans.Customer;
-import lombok.Data;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Lazy
 public class CompanyService extends ClientServices {
 
     private int companyId;
@@ -20,37 +23,35 @@ public class CompanyService extends ClientServices {
 
 
     @Override
-    public boolean login(String email, String password) {
+    public boolean login(String email, String password) throws IllegalActionException {
 
         // Keep the company in a variable to minimize the amount of queries.
         Company company = companyRepo.findByEmail(email);
 
 
-        if (!companyRepo.existsByEmail(email)) {
-            System.out.println("incorrect email");
-            return false;
-        } else if (!company.getPassword().equals(password)) {
-            System.out.println("INCORRECT PASSWORD");
-            return false;
-        }
+        if (!companyRepo.existsByEmail(email))
+            throw new IllegalActionException("Incorrect email address");
+
+
+        else if (!company.getPassword().equals(password))
+            throw new IllegalActionException("Incorrect password");
 
 
         this.currentCompany = company;
-        company=null;
+        company = null;
         this.companyId = currentCompany.getId();
         return true;
 
     }
 
-    public void addCoupon(Coupon coupon) {
+    public void addCoupon(Coupon coupon) throws AlreadyExistsException {
 
         for (Coupon companyCoupon : currentCompany.getCoupons()) {
 
 
-            if (companyCoupon.getTitle().equals(coupon.getTitle())) {
-                System.out.println("ALREADY EXISTS TITLE IN COMPANY");
-                return;
-            }
+            if (companyCoupon.getTitle().equals(coupon.getTitle()))
+                throw new AlreadyExistsException("coupon title");
+
 
         }
 
@@ -64,16 +65,15 @@ public class CompanyService extends ClientServices {
 
     }
 
-    public void updateCoupon(Coupon coupon) {
+    public void updateCoupon(Coupon coupon) throws IllegalActionException {
 
         // ** Checking if coupon id is changed in the Coupon id setter **
 
 
-        // ** Comparing companies id's between coupon in DB and the new coupon ** //
+        // Comparing companies id's between coupon in DB and the new coupon
         int CompanyOfCoupon = couponRepo.getOne(coupon.getId()).getCompany().getId();
         if (CompanyOfCoupon != coupon.getCompany().getId()) {
-            System.out.println("CANNOT CHANGE COMPANY EXCEPTION");
-            return;
+        throw new IllegalActionException("illegal to change company id");
         }
 
 
@@ -92,10 +92,7 @@ public class CompanyService extends ClientServices {
 
 
             // Un-tie the bidirectional between the coupon and the customer
-
             couponOwner.getCoupons().remove(currentCoupon);
-            customerRepo.saveAndFlush(couponOwner);
-
         }
 
         // Deleting coupon from company coupon List will delete the coupon cause of cascadeType Remove.

@@ -1,14 +1,17 @@
 package com.amitrei.couponsystemv2.security;
 
 
+import com.amitrei.couponsystemv2.Exceptions.IllegalActionException;
 import com.amitrei.couponsystemv2.services.AdminService;
 import com.amitrei.couponsystemv2.services.ClientServices;
 import com.amitrei.couponsystemv2.services.CompanyService;
 import com.amitrei.couponsystemv2.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component
+@Lazy
 public class LoginManager {
 
 
@@ -20,7 +23,7 @@ public class LoginManager {
     private CompanyService companyService;
 
 
-    public ClientServices login(String email, String password, ClientType clientType) {
+    public ClientServices login(String email, String password, ClientType clientType) throws IllegalActionException {
 
         switch (clientType) {
 

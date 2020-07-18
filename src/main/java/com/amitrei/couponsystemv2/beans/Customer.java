@@ -1,21 +1,18 @@
 package com.amitrei.couponsystemv2.beans;
 
 
+import com.amitrei.couponsystemv2.Exceptions.IllegalActionException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(exclude="coupons")
 
 public class Customer {
 
@@ -36,22 +33,19 @@ public class Customer {
     private String password;
 
 
-
-        @ManyToMany(fetch = FetchType.EAGER)
-        @JoinTable(name = "customer_vs_coupons")
-        private Set<Coupon> coupons=new HashSet<>();
-
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "customer_vs_coupons")
+    private Set<Coupon> coupons = new HashSet<>();
 
 
-        public void setId(int id) {
+    public void setId(int id) throws IllegalActionException {
 
-            if(this.id==0) {
-                this.id=id;
-            }
-
-            else {
-                System.out.println("cannot change id EXCEPTION");
-            }
+        if (this.id == 0) {
+            this.id = id;
+        } else {
+            throw new IllegalActionException("cannot change customer id");
         }
+    }
+
 
 }

@@ -1,5 +1,6 @@
 package com.amitrei.couponsystemv2.beans;
 
+import com.amitrei.couponsystemv2.Exceptions.IllegalActionException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,20 +27,17 @@ public class Company {
     @Column(nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "company",cascade = CascadeType.REMOVE,fetch = FetchType.EAGER)
-    private List<Coupon> coupons=new ArrayList<>();
+    @OneToMany(mappedBy = "company", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    private List<Coupon> coupons = new ArrayList<>();
 
 
-
-    public void setId(int id) {
-        if(this.id==0) {
-            this.id=id;
-        }
-        else{
-            System.out.println("Cannot change company Id");
+    public void setId(int id) throws IllegalActionException {
+        if (this.id == 0) {
+            this.id = id;
+        } else {
+            throw new IllegalActionException("cannot change company id");
         }
     }
-
 
 
 }

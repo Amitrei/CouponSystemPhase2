@@ -7,13 +7,19 @@ import com.amitrei.couponsystemv2.repositories.CustomerRepo;
 import com.amitrei.couponsystemv2.services.CustomerService;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.transaction.UserTransaction;
+import java.util.ArrayList;
 import java.util.List;
 
 
 @Component
+@Lazy
 public class CouponExpirationDailyJob implements Runnable {
 
     private Boolean quit = false;
@@ -29,39 +35,45 @@ public class CouponExpirationDailyJob implements Runnable {
 
 
     @Override
-    @Transactional
     public void run() {
 
 
         while (!quit) {
+            deleteExpiredCoupon();
+        }
 
-            List<Coupon> allCoupons = couponRepo.findAll();
-            for (Coupon coupon : allCoupons) {
+        try {
+            Thread.sleep(1000 * 60 * 60 * 24);
+        } catch (InterruptedException e) {
+            System.out.println(e.getMessage());
+        }
 
-                if(dateUtil.isDatePassed(coupon.getEnd_date())) {
+    }
 
-                    for(Customer couponOwner : coupon.getCustomers()) {
+    public void stop() {
+        this.quit = true;
 
-                        couponOwner.getCoupons().remove(coupon);
-                        customerRepo.saveAndFlush(couponOwner);
+    }
 
-                    }
 
-                    couponRepo.delete(coupon);
+    public void deleteExpiredCoupon() {
+        List<Coupon> allCoupons = couponRepo.findAll();
+        for (Coupon coupon : allCoupons) {
+
+            if (dateUtil.isDatePassed(coupon.getEnd_date())) {
+
+                for (Customer couponOwner : coupon.getCustomers()) {
+
+                    couponOwner.getCoupons().removeIf(coupon1 -> coupon1.getId() == coupon.getId());
+                    customerRepo.saveAndFlush(couponOwner);
+
                 }
-            }
 
-            try {
-                Thread.sleep(1000*60*60*24);
-            } catch (InterruptedException e) {
-                System.out.println(e.getMessage());
+                couponRepo.delete(coupon);
+
             }
 
         }
-    }
-
-    public void stopIt() {
-        this.quit = true;
 
     }
 }

@@ -1,19 +1,17 @@
 package com.amitrei.couponsystemv2.services;
 
 
+import com.amitrei.couponsystemv2.Exceptions.IllegalActionException;
 import com.amitrei.couponsystemv2.beans.Category;
 import com.amitrei.couponsystemv2.beans.Coupon;
 import com.amitrei.couponsystemv2.beans.Customer;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@Lazy
 public class CustomerService extends ClientServices {
 
     private int customerId;
@@ -21,19 +19,17 @@ public class CustomerService extends ClientServices {
 
 
     @Override
-    public boolean login(String email, String password) {
+    public boolean login(String email, String password) throws IllegalActionException {
 
 
         Customer customer = customerRepo.findByEmail(email);
 
-        if (!customerRepo.existsByEmail(email)) {
-            System.out.println("EMAIL INCORRECT");
-            return false;
+        if (!customerRepo.existsByEmail(email))
+            throw new IllegalActionException("Incorrect email address");
 
-        } else if (!customer.getPassword().equals(password)) {
-            System.out.println("PASSWORD INCORRECT");
-            return false;
-        }
+
+        else if (!customer.getPassword().equals(password))
+            throw new IllegalActionException("Incorrect password");
 
 
         this.currentCustomer = customer;
@@ -44,34 +40,27 @@ public class CustomerService extends ClientServices {
 
 
 
-    public void purchaseCoupon(Coupon coupon) {
 
-        if (coupon.getAmount() <= 0) {
-            System.out.println("NO COUPON AVILIABLE");
-            return;
+    public void purchaseCoupon(Coupon coupon) throws IllegalActionException {
 
+        if (coupon.getAmount() <= 0)
+            throw new IllegalActionException("coupon is out of stock");
 
-        } else if (dateUtil.currentDate().after(coupon.getEnd_date())) {
+        else if (dateUtil.currentDate().after(coupon.getEnd_date()))
 
-            System.out.println("SORRY ALREADY EXPIRED");
-            return;
+            throw new IllegalActionException("coupon is already expired");
 
-        } else if (currentCustomer.getCoupons().contains(coupon)) {
-            System.out.println("COUPON ALREADY PURCHASED");
-            return;
+        else if (currentCustomer.getCoupons().contains(coupon))
+            throw new IllegalActionException("customer already purchased this coupon");
 
-        }
 
         coupon.setAmount(coupon.getAmount() - 1);
         couponRepo.saveAndFlush(coupon);
-
-       Customer customerFromDB = customerRepo.getOne(customerId);
-       customerFromDB.getCoupons().add(coupon);
+        Customer customerFromDB = customerRepo.getOne(customerId);
+        customerFromDB.getCoupons().add(coupon);
         customerRepo.save(customerFromDB);
-        currentCustomer=customerFromDB;
-        System.out.println(currentCustomer);
+        currentCustomer = customerFromDB;
     }
-
 
 
     public Set<Coupon> getCustomerCoupons() {
@@ -81,24 +70,24 @@ public class CustomerService extends ClientServices {
 
     public Set<Coupon> getCustomerCoupons(Category category) {
 
-        Set<Coupon> filterdSet = currentCustomer.getCoupons().stream()
+        Set<Coupon> filteredSet = currentCustomer.getCoupons().stream()
                 .filter(coupon -> category.ordinal() == coupon.getCategoryId().ordinal())
                 .collect(Collectors.toSet());
-        return filterdSet;
+        return filteredSet;
     }
 
 
     public Set<Coupon> getCustomerCoupons(double maxPrice) {
 
-        Set<Coupon> filterdSet = currentCustomer.getCoupons().stream()
+        Set<Coupon> filteredSet = currentCustomer.getCoupons().stream()
                 .filter(coupon -> maxPrice >= coupon.getPrice())
                 .collect(Collectors.toSet());
-        return filterdSet;
+        return filteredSet;
     }
 
 
     public Customer getCustomerDetails() {
-        return currentCustomer;
+        return this.currentCustomer;
     }
 
 

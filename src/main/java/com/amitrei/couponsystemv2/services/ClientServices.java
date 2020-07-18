@@ -1,5 +1,6 @@
 package com.amitrei.couponsystemv2.services;
 
+import com.amitrei.couponsystemv2.Exceptions.IllegalActionException;
 import com.amitrei.couponsystemv2.repositories.CompanyRepo;
 import com.amitrei.couponsystemv2.repositories.CouponRepo;
 import com.amitrei.couponsystemv2.repositories.CustomerRepo;
@@ -24,5 +25,5 @@ public abstract class ClientServices {
     protected DateUtil dateUtil;
 
 
-    public abstract boolean login(String email, String password);
+    public abstract boolean login(String email, String password) throws IllegalActionException;
 }

@@ -1,11 +1,15 @@
 package com.amitrei.couponsystemv2.services;
 
 
+import com.amitrei.couponsystemv2.Exceptions.AlreadyExistsException;
+import com.amitrei.couponsystemv2.Exceptions.DoesNotExistsException;
+import com.amitrei.couponsystemv2.Exceptions.IllegalActionException;
 import com.amitrei.couponsystemv2.beans.Company;
 import com.amitrei.couponsystemv2.beans.Coupon;
 import com.amitrei.couponsystemv2.beans.Customer;
 import com.amitrei.couponsystemv2.repositories.CustomerRepo;
 import com.amitrei.couponsystemv2.security.ClientType;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +18,8 @@ import java.util.List;
 import java.util.Set;
 
 @Service
+@Lazy
+
 public class AdminService extends ClientServices {
 
     private final String ADMIN_EMAIL = "admin@admin.com";
@@ -22,37 +28,30 @@ public class AdminService extends ClientServices {
 
     @Override
     public boolean login(String email, String password) {
+
         return (email.equals(ADMIN_EMAIL) && password.equals(ADMIN_PASSWORD));
     }
 
-    public void addCompany(Company company) {
+
+    public void addCompany(Company company) throws AlreadyExistsException {
 
         for (Company comp : companyRepo.findAll()) {
-
-            if (comp.getName().equals(company.getName()) || comp.getEmail().equals(company.getEmail())) {
-                // *********   throw ALREADY EXISTS *********
-                System.out.println("ALREADY EXISTS");
-                return;
-
-            }
-
+            if (comp.getName().equals(company.getName()) || comp.getEmail().equals(company.getEmail()))
+                throw new AlreadyExistsException("company name");
         }
+
         companyRepo.save(company);
 
     }
 
 
-    public void updateCompany(Company company) {
+    public void updateCompany(Company company) throws IllegalActionException, DoesNotExistsException {
 
-        // Cannot change the company name
+
         if (!companyRepo.getOne(company.getId()).getName().equals(company.getName())) {
-            System.out.println("CANNOT CHANGE NAME!");
-            return;
-        }
-        //CANNOT CHANGE NAME EXCEPTION
-
-        else if (!companyRepo.existsById(company.getId())) {
-            System.out.println("NOT EXISTS COMPANY");
+            throw new IllegalActionException("cannot change company name");
+        } else if (!companyRepo.existsById(company.getId())) {
+            throw new DoesNotExistsException("company");
         }
 
         companyRepo.saveAndFlush(company);
@@ -61,13 +60,10 @@ public class AdminService extends ClientServices {
 
 
     @Transactional
-    public void deleteCompany(int companyID) {
+    public void deleteCompany(int companyID) throws DoesNotExistsException {
 
-        if (!companyRepo.existsById(companyID)) {
-            // ******** DOESNOT EXISTS EXCEPTION
-            System.out.println("company doesnot exists EXCEPTION");
-            return;
-        }
+        if (!companyRepo.existsById(companyID)) throw new DoesNotExistsException("company");
+
 
 
         Company thisCompany = companyRepo.getOne(companyID);
@@ -84,7 +80,7 @@ public class AdminService extends ClientServices {
                 for (Customer couponOwner : companyCoupon.getCustomers()) {
 
                     couponOwner.getCoupons().remove(companyCoupon);
-                    customerRepo.saveAndFlush(couponOwner);
+//                    customerRepo.saveAndFlush(couponOwner);
 
                 }
 
@@ -104,12 +100,9 @@ public class AdminService extends ClientServices {
     }
 
 
-    public void addCustomer(Customer customer) {
+    public void addCustomer(Customer customer) throws AlreadyExistsException {
 
-        if (customerRepo.existsByEmail(customer.getEmail())) {
-            System.out.println("ALREADY EXISTS EXCEPTION");
-            return;
-        }
+        if (customerRepo.existsByEmail(customer.getEmail())) throw new AlreadyExistsException("customer");
         customerRepo.save(customer);
     }
 

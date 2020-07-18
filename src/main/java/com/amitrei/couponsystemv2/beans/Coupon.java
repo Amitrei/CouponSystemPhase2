@@ -1,5 +1,6 @@
 package com.amitrei.couponsystemv2.beans;
 
+import com.amitrei.couponsystemv2.Exceptions.IllegalActionException;
 import com.amitrei.couponsystemv2.repositories.CompanyRepo;
 import com.amitrei.couponsystemv2.repositories.CouponRepo;
 import lombok.AllArgsConstructor;
@@ -26,12 +27,6 @@ public class Coupon {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-
-
-    @Transient
-    @Autowired
-    private CouponRepo couponRepo;
 
 
     @ManyToOne()
@@ -67,10 +62,8 @@ public class Coupon {
 
 
 
-    public void setId(int id) {
-
-        System.out.println("CANNOT CHANGE ID");
-
+    public void setId(int id) throws IllegalActionException {
+        throw new IllegalActionException("cannot change coupons id");
     }
 
 
@@ -89,4 +82,6 @@ public class Coupon {
                 ", image='" + image + '\'' +
                 '}';
     }
+
+
 }
