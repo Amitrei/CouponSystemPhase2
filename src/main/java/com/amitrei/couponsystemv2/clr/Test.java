@@ -1,7 +1,7 @@
 package com.amitrei.couponsystemv2.clr;
 
-import com.amitrei.couponsystemv2.Exceptions.AlreadyExistsException;
-import com.amitrei.couponsystemv2.Exceptions.IllegalActionException;
+import com.amitrei.couponsystemv2.exceptions.AlreadyExistsException;
+import com.amitrei.couponsystemv2.exceptions.IllegalActionException;
 import com.amitrei.couponsystemv2.beans.*;
 import com.amitrei.couponsystemv2.repositories.CompanyRepo;
 import com.amitrei.couponsystemv2.repositories.CouponRepo;
@@ -9,13 +9,14 @@ import com.amitrei.couponsystemv2.repositories.CustomerRepo;
 import com.amitrei.couponsystemv2.security.ClientType;
 import com.amitrei.couponsystemv2.security.LoginManager;
 import com.amitrei.couponsystemv2.services.AdminService;
+import com.amitrei.couponsystemv2.services.ClientServices;
 import com.amitrei.couponsystemv2.services.CompanyService;
 import com.amitrei.couponsystemv2.services.CustomerService;
 import com.amitrei.couponsystemv2.utils.CouponExpirationDailyJob;
 import com.amitrei.couponsystemv2.utils.DateUtil;
 import de.vandermeer.asciitable.AsciiTable;
-import de.vandermeer.asciithemes.a7.A7_Grids;
 import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -222,12 +223,12 @@ public class Test implements CommandLineRunner {
         customerRepo.save(customer);
 
 
-        col1=companyRepo.getOne(company.getId()).toString();
+        col1 = companyRepo.getOne(company.getId()).toString();
         col2 = customerRepo.getOne(customer.getId()).toString();
 
         adminService.deleteCompany(company.getId());
 
-        String col1After =companyRepo.findAll().toString();
+        String col1After = companyRepo.findAll().toString();
         var col2After = customerRepo.getOne(customer.getId()).toString();
 
 
@@ -238,9 +239,9 @@ public class Test implements CommandLineRunner {
         at.addRule();
         at.addRow(col1, col2).setTextAlignment(TextAlignment.CENTER);
         at.addRule();
-        at.addRow("Company list from DB After delete","Customer who purchased the coupon").setTextAlignment(TextAlignment.CENTER);
+        at.addRow("Company list from DB After delete", "Customer who purchased the coupon").setTextAlignment(TextAlignment.CENTER);
         at.addRule();
-        at.addRow(col1After,col2After).setTextAlignment(TextAlignment.CENTER);
+        at.addRow(col1After, col2After).setTextAlignment(TextAlignment.CENTER);
         at.addRule();
         rend = at.render();
         System.out.println(rend);
@@ -260,7 +261,7 @@ public class Test implements CommandLineRunner {
         at.addRule();
         at.addRow("All companies from DB").setTextAlignment(TextAlignment.CENTER);
         at.addRule();
-        for(Company companyFromList : adminService.getAllCompanies()) {
+        for (Company companyFromList : adminService.getAllCompanies()) {
             at.addRow(companyFromList.toString()).setTextAlignment(TextAlignment.CENTER);
             at.addRule();
         }
@@ -270,7 +271,7 @@ public class Test implements CommandLineRunner {
         System.out.println();
 
         printTitle("GET COMPANY BY ID");
-        int companyCocaColaId=companyRepo.findByEmail("Coca-cola@gmail.com").getId();
+        int companyCocaColaId = companyRepo.findByEmail("Coca-cola@gmail.com").getId();
         at = new AsciiTable();
         at.getContext().setWidth(200).setFrameLeftMargin(20);
         at.addRule();
@@ -284,39 +285,34 @@ public class Test implements CommandLineRunner {
         System.out.println();
 
 
-
         printTitle("ADDING NEW CUSTOMER");
 
-        col1=customerRepo.findAll().toString();
+        col1 = customerRepo.findAll().toString();
         customer = Customer.builder().email("HiItsMoshe@gmail.com").firstName("Moshe").lastName("Cohen").password("123213").coupons(new HashSet<>()).build();
         try {
             adminService.addCustomer(customer);
-        }
-
-        catch (AlreadyExistsException e) {
+        } catch (AlreadyExistsException e) {
             System.out.println(e.getMessage());
         }
 
-        col2=customerRepo.findAll().toString();
+        col2 = customerRepo.findAll().toString();
         customer = Customer.builder().email("HiItsMoshe@gmail.com").firstName("Moshiko").lastName("Plotke").password("123213").coupons(new HashSet<>()).build();
 
         try {
             adminService.addCustomer(customer);
-        }
-
-        catch (AlreadyExistsException e) {
-            col1After=e.getMessage();
+        } catch (AlreadyExistsException e) {
+            col1After = e.getMessage();
         }
 
         at = new AsciiTable();
         at.getContext().setWidth(200).setFrameLeftMargin(20);
         at.addRule();
-        at.addRow("Before customers list from DB:","After adding customer").setTextAlignment(TextAlignment.CENTER);
+        at.addRow("Before customers list from DB:", "After adding customer").setTextAlignment(TextAlignment.CENTER);
         at.addRule();
-        at.addRow(col1,col2).setTextAlignment(TextAlignment.CENTER);
+        at.addRow(col1, col2).setTextAlignment(TextAlignment.CENTER);
         at.addRule();
-        at.addRow(null,"Trying adding another customer with the same email:").setTextAlignment(TextAlignment.CENTER);
-        at.addRow(null,col1After).setTextAlignment(TextAlignment.CENTER);
+        at.addRow(null, "Trying adding another customer with the same email:").setTextAlignment(TextAlignment.CENTER);
+        at.addRow(null, col1After).setTextAlignment(TextAlignment.CENTER);
         at.addRule();
         rend = at.render();
         System.out.println(rend);
@@ -324,32 +320,31 @@ public class Test implements CommandLineRunner {
         System.out.println();
 
         printTitle("UPDATE CUSTOMER");
-        col1=customerRepo.findAll().toString();
-        Customer customer2=customerRepo.findByEmail(customer.getEmail());
+        col1 = customerRepo.findAll().toString();
+        Customer customer2 = customerRepo.findByEmail(customer.getEmail());
         customer2.setFirstName("updatedCustomer");
         customer2.setLastName("updatedCustomer");
         customer2.setEmail("updateCustomer@gmail.com");
 
         adminService.updateCustomer(customer2);
-        col2=customerRepo.findAll().toString();
+        col2 = customerRepo.findAll().toString();
 
         try {
             customer2.setId(1231243);
-        }
-        catch (IllegalActionException e) {
-            col1After=e.getMessage();
+        } catch (IllegalActionException e) {
+            col1After = e.getMessage();
         }
 
 
         at = new AsciiTable();
         at.getContext().setWidth(200).setFrameLeftMargin(20);
         at.addRule();
-        at.addRow("Before customers list from DB:","After updating customer").setTextAlignment(TextAlignment.CENTER);
+        at.addRow("Before customers list from DB:", "After updating customer").setTextAlignment(TextAlignment.CENTER);
         at.addRule();
-        at.addRow(col1,col2).setTextAlignment(TextAlignment.CENTER);
+        at.addRow(col1, col2).setTextAlignment(TextAlignment.CENTER);
         at.addRule();
-        at.addRow(null,"Trying update the customer ID:").setTextAlignment(TextAlignment.CENTER);
-        at.addRow(null,col1After).setTextAlignment(TextAlignment.CENTER);
+        at.addRow(null, "Trying update the customer ID:").setTextAlignment(TextAlignment.CENTER);
+        at.addRow(null, col1After).setTextAlignment(TextAlignment.CENTER);
         at.addRule();
         rend = at.render();
         System.out.println(rend);
@@ -373,33 +368,118 @@ public class Test implements CommandLineRunner {
         customerRepo.saveAndFlush(customer2);
 
 
-        col1=customerRepo.findAll().toString();
-        col2=couponRepo.allPurchases().entrySet().toString();
+        col1 = customerRepo.findAll().toString();
+        col2 = couponRepo.allPurchases().entrySet().toString();
 
         adminService.deleteCustomer(customer2.getId());
 
 
-        col1After=customerRepo.findAll().toString();
-        col2After=couponRepo.allPurchases().entrySet().toString();
-
-
+        col1After = customerRepo.findAll().toString();
+        col2After = couponRepo.allPurchases().entrySet().toString();
 
 
         at = new AsciiTable();
         at.getContext().setWidth(200).setFrameLeftMargin(20);
         at.addRule();
-        at.addRow("List of customers from DB","List of All purchases from DB").setTextAlignment(TextAlignment.CENTER);
+        at.addRow("List of customers from DB", "List of All purchases from DB").setTextAlignment(TextAlignment.CENTER);
         at.addRule();
-        at.addRow(col1,col2).setTextAlignment(TextAlignment.CENTER);
+        at.addRow(col1, col2).setTextAlignment(TextAlignment.CENTER);
         at.addRule();
-        at.addRow(null,"After Delete").setTextAlignment(TextAlignment.CENTER);
+        at.addRow(null, "After Delete").setTextAlignment(TextAlignment.CENTER);
         at.addRule();
-        at.addRow(col1After,col2After).setTextAlignment(TextAlignment.CENTER);
+        at.addRow(col1After, col2After).setTextAlignment(TextAlignment.CENTER);
         at.addRule();
         rend = at.render();
         System.out.println(rend);
         System.out.println();
         System.out.println();
+
+
+        printTitle("GETTING ALL CUSTOMERS");
+
+        addCustomerDummy();
+        List<Customer> allCustomers = adminService.getAllCustomers();
+
+
+        at = new AsciiTable();
+        at.getContext().setWidth(200).setFrameLeftMargin(20);
+        at.addRule();
+        at.addRow("List of all customers from DB").setTextAlignment(TextAlignment.CENTER);
+        at.addRule();
+
+        for (Customer customer1 : allCustomers) {
+            at.addRow(customer1.getId() + " " + customer1.getFirstName() + " " + customer1.getLastName()).setTextAlignment(TextAlignment.CENTER);
+            at.addRule();
+
+        }
+
+        rend = at.render();
+        System.out.println(rend);
+
+        System.out.println();
+        System.out.println();
+
+
+        printTitle("GETTING CUSTOMER BY ID");
+        Customer customerById = adminService.getOneCustomer(4);
+        at = new AsciiTable();
+        at.getContext().setWidth(200).setFrameLeftMargin(20);
+        at.addRule();
+        at.addRow("Getting customer from DB by id 4").setTextAlignment(TextAlignment.CENTER);
+        at.addRule();
+        at.addRow(customerById.getId() + " " + customerById.getFirstName() + " " + customerById.getLastName()).setTextAlignment(TextAlignment.CENTER);
+        at.addRule();
+        rend = at.render();
+        System.out.println(rend);
+        System.out.println();
+        System.out.println();
+
+
+        /**
+         *
+         * COMPANY TESTS
+         *
+         *
+         */
+
+
+        companyTestTitle();
+        System.out.println();
+        System.out.println();
+        printTitle("COMPANY LOGIN");
+        ClientServices companyBadLogin=null;
+        String  incorrectMessage=null;
+
+
+
+
+        System.out.println("### Company Login with incorrect details:");
+
+        try {
+            companyBadLogin = loginManager.login("Cocax-Cola@gmail.com", "1xx234", ClientType.Company);
+        }
+
+        catch (IllegalActionException e) {
+            System.out.println(e.getMessage());
+        }
+
+        System.out.println();
+        System.out.println("### Company Login with correct details:");
+
+        ClientServices companyGoodLogin=null;
+        try {
+            companyGoodLogin = loginManager.login("Coca-Cola@gmail.com", "1234", ClientType.Company);
+        }
+
+        catch (IllegalActionException e) {
+            System.out.println(e.getMessage());
+        }
+
+        System.out.println(companyGoodLogin.getClass());
+        System.out.println();
+        System.out.println();
+
+        printTitle("ADDING COUPON");
 
 
 
@@ -409,21 +489,25 @@ public class Test implements CommandLineRunner {
     }
 
 
+    private void addCustomerDummy() {
 
 
+        Customer customerDummy1 = Customer.builder().email("Amitreinich@gmail.com").password("12345").firstName("Amit").lastName("Reinich").build();
+        Customer customerDummy2 = Customer.builder().email("SimhaReef@gmail.com").password("12345").firstName("Simha").lastName("Reef").build();
+        Customer customerDummy3 = Customer.builder().email("AviRon@gmail.com").password("12345").firstName("Avi").lastName("Ron").build();
 
+        customerRepo.save(customerDummy1);
+        customerRepo.save(customerDummy2);
+        customerRepo.save(customerDummy3);
 
-
-
-
-
+    }
 
 
     private void addCompaniesDummy() {
 
-        Company cDummy1= Company.builder().email("Coca-cola@gmail.com").name("Coca-Cola").password("1234").build();
-        Company cDummy2= Company.builder().email("McDonalds@gmail.com").name("McDonalds").password("1234").build();
-        Company cDummy3= Company.builder().email("HolmesPlaces@gmail.com").name("Holmes-Places").password("1234").build();
+        Company cDummy1 = Company.builder().email("Coca-cola@gmail.com").name("Coca-Cola").password("1234").build();
+        Company cDummy2 = Company.builder().email("McDonalds@gmail.com").name("McDonalds").password("1234").build();
+        Company cDummy3 = Company.builder().email("HolmesPlaces@gmail.com").name("Holmes-Places").password("1234").build();
 
         companyRepo.save(cDummy1);
         companyRepo.save(cDummy2);

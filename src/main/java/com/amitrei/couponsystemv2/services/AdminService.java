@@ -1,21 +1,17 @@
 package com.amitrei.couponsystemv2.services;
 
 
-import com.amitrei.couponsystemv2.Exceptions.AlreadyExistsException;
-import com.amitrei.couponsystemv2.Exceptions.DoesNotExistsException;
-import com.amitrei.couponsystemv2.Exceptions.IllegalActionException;
+import com.amitrei.couponsystemv2.exceptions.AlreadyExistsException;
+import com.amitrei.couponsystemv2.exceptions.DoesNotExistsException;
+import com.amitrei.couponsystemv2.exceptions.IllegalActionException;
 import com.amitrei.couponsystemv2.beans.Company;
 import com.amitrei.couponsystemv2.beans.Coupon;
 import com.amitrei.couponsystemv2.beans.Customer;
-import com.amitrei.couponsystemv2.repositories.CustomerRepo;
-import com.amitrei.couponsystemv2.security.ClientType;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @Lazy
@@ -39,9 +35,7 @@ public class AdminService extends ClientServices {
 
             if (comp.getName().equals(company.getName())) {
                 throw new AlreadyExistsException("company name");
-            }
-
-            else if (comp.getEmail().equals(company.getEmail())) {
+            } else if (comp.getEmail().equals(company.getEmail())) {
                 throw new AlreadyExistsException("company email");
 
             }
@@ -67,7 +61,6 @@ public class AdminService extends ClientServices {
     }
 
 
-    @Transactional
     public void deleteCompany(int companyID) throws DoesNotExistsException {
 
         if (!companyRepo.existsById(companyID)) throw new DoesNotExistsException("company");
@@ -78,22 +71,14 @@ public class AdminService extends ClientServices {
 
         if (thisCompany.getCoupons().size() > 0) {
 
-
-//O(n)^2
-// NEED TO SEPERATE TO 2 DIFFERENTS LOOPS
-
-            for (Coupon companyCoupon : thisCompany.getCoupons()) {
-
-                for (Customer couponOwner : companyCoupon.getCustomers()) {
-
-                    couponOwner.getCoupons().remove(companyCoupon);
-//                    customerRepo.saveAndFlush(couponOwner);
-
-                }
-
+            for (Coupon coupon : thisCompany.getCoupons()) {
+                couponRepo.deletePurchase(coupon.getId());
             }
-            companyRepo.delete(thisCompany);
+
+
         }
+
+        companyRepo.delete(thisCompany);
     }
 
 
@@ -108,7 +93,6 @@ public class AdminService extends ClientServices {
 
 
     public void addCustomer(Customer customer) throws AlreadyExistsException {
-
         if (customerRepo.existsByEmail(customer.getEmail())) throw new AlreadyExistsException("customer");
         customerRepo.save(customer);
     }
@@ -124,7 +108,7 @@ public class AdminService extends ClientServices {
 
     public void deleteCustomer(int customerId) {
 
-        // ManyToMany bidirectional connection will delete all customer purchases
+        // ManyToMany bi-directional connection will delete all customer purchases
 
         customerRepo.delete(customerRepo.getOne(customerId));
 
@@ -136,7 +120,7 @@ public class AdminService extends ClientServices {
 
 
     public Customer getOneCustomer(int customerId) {
-        return customerRepo.getOne(1);
+        return customerRepo.getOne(customerId);
     }
 
 

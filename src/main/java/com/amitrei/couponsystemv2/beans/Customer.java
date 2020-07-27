@@ -1,7 +1,7 @@
 package com.amitrei.couponsystemv2.beans;
 
 
-import com.amitrei.couponsystemv2.Exceptions.IllegalActionException;
+import com.amitrei.couponsystemv2.exceptions.IllegalActionException;
 import lombok.*;
 
 import javax.persistence.*;
@@ -36,7 +36,6 @@ public class Customer {
     @ManyToMany()
     @JoinTable(name = "customer_vs_coupons")
     private Set<Coupon> coupons = new HashSet<>();
-
 
     public void setId(int id) throws IllegalActionException {
 

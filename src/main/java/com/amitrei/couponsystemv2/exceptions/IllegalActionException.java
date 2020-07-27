@@ -1,4 +1,4 @@
-package com.amitrei.couponsystemv2.Exceptions;
+package com.amitrei.couponsystemv2.exceptions;
 
 public class IllegalActionException extends Exception{
 

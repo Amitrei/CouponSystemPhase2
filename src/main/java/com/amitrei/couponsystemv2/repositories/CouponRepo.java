@@ -2,8 +2,10 @@ package com.amitrei.couponsystemv2.repositories;
 
 import com.amitrei.couponsystemv2.beans.Coupon;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -26,4 +28,9 @@ public interface CouponRepo extends JpaRepository<Coupon,Integer> {
     @Query(value = "SELECT * FROM customer_vs_coupons",nativeQuery = true)
     Map<Integer,Integer> allPurchases();
 
+
+    @Transactional
+    @Modifying
+    @Query(value = "DELETE FROM customer_vs_coupons WHERE coupons_id=:couponId",nativeQuery = true)
+    void deletePurchase(@Param("couponId") int couponId);
 }

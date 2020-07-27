@@ -1,6 +1,6 @@
 package com.amitrei.couponsystemv2.beans;
 
-import com.amitrei.couponsystemv2.Exceptions.IllegalActionException;
+import com.amitrei.couponsystemv2.exceptions.IllegalActionException;
 import lombok.*;
 
 import javax.persistence.*;

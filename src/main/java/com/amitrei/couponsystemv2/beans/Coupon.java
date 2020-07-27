@@ -1,6 +1,6 @@
 package com.amitrei.couponsystemv2.beans;
 
-import com.amitrei.couponsystemv2.Exceptions.IllegalActionException;
+import com.amitrei.couponsystemv2.exceptions.IllegalActionException;
 import lombok.*;
 
 import javax.persistence.*;
@@ -13,8 +13,6 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
-@EqualsAndHashCode(exclude="customers")
-
 public class Coupon {
 
 
@@ -26,9 +24,9 @@ public class Coupon {
     @ManyToOne()
     private Company company;
 
-
-    @ManyToMany(mappedBy = "coupons")
-    Set<Customer> customers = new HashSet<>();
+//
+//    @ManyToMany(mappedBy = "coupons")
+//    Set<Customer> customers = new HashSet<>();
 
 
 

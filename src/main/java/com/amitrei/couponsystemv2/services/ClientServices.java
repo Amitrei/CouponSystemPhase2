@@ -1,10 +1,9 @@
 package com.amitrei.couponsystemv2.services;
 
-import com.amitrei.couponsystemv2.Exceptions.IllegalActionException;
+import com.amitrei.couponsystemv2.exceptions.IllegalActionException;
 import com.amitrei.couponsystemv2.repositories.CompanyRepo;
 import com.amitrei.couponsystemv2.repositories.CouponRepo;
 import com.amitrei.couponsystemv2.repositories.CustomerRepo;
-import com.amitrei.couponsystemv2.security.ClientType;
 import com.amitrei.couponsystemv2.utils.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 

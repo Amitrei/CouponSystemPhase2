@@ -4,17 +4,9 @@ import com.amitrei.couponsystemv2.beans.Coupon;
 import com.amitrei.couponsystemv2.beans.Customer;
 import com.amitrei.couponsystemv2.repositories.CouponRepo;
 import com.amitrei.couponsystemv2.repositories.CustomerRepo;
-import com.amitrei.couponsystemv2.services.CustomerService;
-import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-import javax.transaction.UserTransaction;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -39,7 +31,7 @@ public class CouponExpirationDailyJob implements Runnable {
 
 
         while (!quit) {
-            deleteExpiredCoupon();
+//            deleteExpiredCoupon();
         }
 
         try {
@@ -56,24 +48,24 @@ public class CouponExpirationDailyJob implements Runnable {
     }
 
 
-    public void deleteExpiredCoupon() {
-        List<Coupon> allCoupons = couponRepo.findAll();
-        for (Coupon coupon : allCoupons) {
-
-            if (dateUtil.isDatePassed(coupon.getEnd_date())) {
-
-                for (Customer couponOwner : coupon.getCustomers()) {
-
-                    couponOwner.getCoupons().removeIf(coupon1 -> coupon1.getId() == coupon.getId());
-                    customerRepo.saveAndFlush(couponOwner);
-
-                }
-
-                couponRepo.delete(coupon);
-
-            }
-
-        }
-
-    }
+//    public void deleteExpiredCoupon() {
+//        List<Coupon> allCoupons = couponRepo.findAll();
+//        for (Coupon coupon : allCoupons) {
+//
+//            if (dateUtil.isDatePassed(coupon.getEnd_date())) {
+//
+//                for (Customer couponOwner : coupon.getCustomers()) {
+//
+//                    couponOwner.getCoupons().removeIf(coupon1 -> coupon1.getId() == coupon.getId());
+//                    customerRepo.saveAndFlush(couponOwner);
+//
+//                }
+//
+//                couponRepo.delete(coupon);
+//
+//            }
+//
+//        }
+//
+//    }
 }

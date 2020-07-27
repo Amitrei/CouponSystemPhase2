@@ -1,17 +1,18 @@
 package com.amitrei.couponsystemv2.services;
 
 
-import com.amitrei.couponsystemv2.Exceptions.IllegalActionException;
+import com.amitrei.couponsystemv2.exceptions.IllegalActionException;
 import com.amitrei.couponsystemv2.beans.Category;
 import com.amitrei.couponsystemv2.beans.Coupon;
 import com.amitrei.couponsystemv2.beans.Customer;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-@Lazy
+@Scope("prototype")
 public class CustomerService extends ClientServices {
 
     private int customerId;
@@ -46,11 +47,11 @@ public class CustomerService extends ClientServices {
         if (coupon.getAmount() <= 0)
             throw new IllegalActionException("coupon is out of stock");
 
-        else if (dateUtil.currentDate().after(coupon.getEnd_date()))
+        if (dateUtil.currentDate().after(coupon.getEnd_date()))
 
             throw new IllegalActionException("coupon is already expired");
 
-        else if (currentCustomer.getCoupons().contains(coupon))
+        if (currentCustomer.getCoupons().contains(coupon))
             throw new IllegalActionException("customer already purchased this coupon");
 
 

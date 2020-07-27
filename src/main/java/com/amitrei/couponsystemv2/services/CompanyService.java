@@ -1,13 +1,13 @@
 package com.amitrei.couponsystemv2.services;
 
 
-import com.amitrei.couponsystemv2.Exceptions.AlreadyExistsException;
-import com.amitrei.couponsystemv2.Exceptions.IllegalActionException;
+import com.amitrei.couponsystemv2.exceptions.AlreadyExistsException;
+import com.amitrei.couponsystemv2.exceptions.IllegalActionException;
 import com.amitrei.couponsystemv2.beans.Category;
 import com.amitrei.couponsystemv2.beans.Company;
 import com.amitrei.couponsystemv2.beans.Coupon;
 import com.amitrei.couponsystemv2.beans.Customer;
-import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Lazy
+@Scope("prototype")
 public class CompanyService extends ClientServices {
 
     private int companyId;
@@ -25,20 +25,19 @@ public class CompanyService extends ClientServices {
     @Override
     public boolean login(String email, String password) throws IllegalActionException {
 
-        // Keep the company in a variable to minimize the amount of queries.
+
+
+        if (!companyRepo.existsByEmail(email)) {
+            throw new IllegalActionException("Incorrect email address");
+        }
+
         Company company = companyRepo.findByEmail(email);
 
-
-        if (!companyRepo.existsByEmail(email))
-            throw new IllegalActionException("Incorrect email address");
-
-
-        else if (!company.getPassword().equals(password))
+         if (!company.getPassword().equals(password))
             throw new IllegalActionException("Incorrect password");
 
 
         this.currentCompany = company;
-        company = null;
         this.companyId = currentCompany.getId();
         return true;
 
@@ -73,7 +72,7 @@ public class CompanyService extends ClientServices {
         // Comparing companies id's between coupon in DB and the new coupon
         int CompanyOfCoupon = couponRepo.getOne(coupon.getId()).getCompany().getId();
         if (CompanyOfCoupon != coupon.getCompany().getId()) {
-        throw new IllegalActionException("illegal to change company id");
+            throw new IllegalActionException("illegal to change company id");
         }
 
 
@@ -83,20 +82,11 @@ public class CompanyService extends ClientServices {
     }
 
 
-    @Transactional
     public void deleteCoupon(int couponId) {
 
-        Coupon currentCoupon = couponRepo.getOne(couponId);
 
-        for (Customer couponOwner : currentCoupon.getCustomers()) {
-
-
-            // Un-tie the bidirectional between the coupon and the customer
-            couponOwner.getCoupons().remove(currentCoupon);
-        }
-
-        // Deleting coupon from company coupon List will delete the coupon cause of cascadeType Remove.
-        currentCompany.getCoupons().remove(currentCoupon);
+        Coupon currentCoupon=couponRepo.getOne(couponId);
+        couponRepo.deletePurchase(couponId);
         couponRepo.delete(currentCoupon);
 
     }
@@ -110,20 +100,22 @@ public class CompanyService extends ClientServices {
         List<Coupon> listByCategory = currentCompany.getCoupons().stream()
                 .filter(coupon -> category.ordinal() == coupon.getCategory().ordinal())
                 .collect(Collectors.toList());
+
         return listByCategory;
     }
+
 
     public List<Coupon> getCompanyCoupons(double maxPrice) {
 
         List<Coupon> listByPrice = currentCompany.getCoupons().stream()
                 .filter(coupon -> maxPrice >= coupon.getPrice())
                 .collect(Collectors.toList());
+
         return listByPrice;
     }
 
 
     public Company companyDetails() {
-
         return currentCompany;
     }
 

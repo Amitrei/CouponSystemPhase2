@@ -1,7 +1,7 @@
 package com.amitrei.couponsystemv2.security;
 
 
-import com.amitrei.couponsystemv2.Exceptions.IllegalActionException;
+import com.amitrei.couponsystemv2.exceptions.IllegalActionException;
 import com.amitrei.couponsystemv2.services.AdminService;
 import com.amitrei.couponsystemv2.services.ClientServices;
 import com.amitrei.couponsystemv2.services.CompanyService;
