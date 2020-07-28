@@ -26,7 +26,6 @@ public class CompanyService extends ClientServices {
     public boolean login(String email, String password) throws IllegalActionException {
 
 
-
         if (!companyRepo.existsByEmail(email)) {
             throw new IllegalActionException("Incorrect email address");
         }
@@ -54,7 +53,7 @@ public class CompanyService extends ClientServices {
 
         }
 
-        //Saving coupon as ManyToOne bidirectional will automaticlly update the company couponlist from the DB
+        //Saving coupon as ManyToOne bi-directional will automaticlly update the company couponlist from the DB
         couponRepo.save(coupon);
 
         // Updating the plain object to include all new coupons.
@@ -84,10 +83,12 @@ public class CompanyService extends ClientServices {
 
     public void deleteCoupon(int couponId) {
 
-
-        Coupon currentCoupon=couponRepo.getOne(couponId);
+        couponRepo.deleteById(couponId);
         couponRepo.deletePurchase(couponId);
-        couponRepo.delete(currentCoupon);
+
+        // Removing coupon from local pojo list
+        currentCompany.getCoupons().removeIf(coupon -> coupon.getId()==couponId);
+
 
     }
 

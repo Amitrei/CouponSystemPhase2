@@ -18,14 +18,19 @@ import java.util.List;
 
 public class AdminService extends ClientServices {
 
+
+
     private final String ADMIN_EMAIL = "admin@admin.com";
     private final String ADMIN_PASSWORD = "admin";
 
 
     @Override
-    public boolean login(String email, String password) {
+    public boolean login(String email, String password) throws IllegalActionException {
 
-        return (email.equals(ADMIN_EMAIL) && password.equals(ADMIN_PASSWORD));
+        if(!email.equals(ADMIN_EMAIL)) throw new IllegalActionException("Incorrect email address");
+        if(!password.equals(ADMIN_PASSWORD)) throw new IllegalActionException("Incorrect password");
+
+        return true;
     }
 
 
@@ -33,12 +38,13 @@ public class AdminService extends ClientServices {
 
         for (Company comp : companyRepo.findAll()) {
 
-            if (comp.getName().equals(company.getName())) {
+            if (comp.getName().equals(company.getName()))
                 throw new AlreadyExistsException("company name");
-            } else if (comp.getEmail().equals(company.getEmail())) {
+
+            if (comp.getEmail().equals(company.getEmail()))
                 throw new AlreadyExistsException("company email");
 
-            }
+
         }
 
 
@@ -50,11 +56,15 @@ public class AdminService extends ClientServices {
     public void updateCompany(Company company) throws IllegalActionException, DoesNotExistsException {
 
 
+
+        if (!companyRepo.existsById(company.getId()))
+            throw new DoesNotExistsException("company");
+
         if (!companyRepo.getOne(company.getId()).getName().equals(company.getName())) {
             throw new IllegalActionException("cannot change company name");
-        } else if (!companyRepo.existsById(company.getId())) {
-            throw new DoesNotExistsException("company");
         }
+
+
 
         companyRepo.saveAndFlush(company);
 

@@ -33,7 +33,7 @@ public class Customer {
     private String password;
 
 
-    @ManyToMany()
+    @OneToMany()
     @JoinTable(name = "customer_vs_coupons")
     private Set<Coupon> coupons = new HashSet<>();
 
