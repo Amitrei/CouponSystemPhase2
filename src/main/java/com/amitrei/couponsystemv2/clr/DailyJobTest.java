@@ -88,6 +88,8 @@ public class DailyJobTest implements CommandLineRunner {
         t1.start();
         Thread.sleep(3000);
 
+
+        System.out.println();
         at = new AsciiTable();
         at.getContext().setWidth(200).setFrameLeftMargin(20);
         at.addRule();

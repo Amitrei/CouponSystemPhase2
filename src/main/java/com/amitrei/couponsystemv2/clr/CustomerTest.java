@@ -201,7 +201,7 @@ public class CustomerTest implements CommandLineRunner {
         at.addRule();
         at.addRow("Trying purchasing coupon with 0 amount").setTextAlignment(TextAlignment.CENTER);
         at.addRule();
-        at.addRow( "Coupon id - " + coupon.getId() + " Amount " + coupon.getAmount());
+        at.addRow( "Coupon id - " + coupon.getId() + " Amount " + coupon.getAmount()).setTextAlignment(TextAlignment.CENTER);
         at.addRule();
         at.addRow(getException).setTextAlignment(TextAlignment.CENTER);
         at.addRule();
