@@ -31,7 +31,7 @@ public class Coupon {
 
 
 
-    @Column(nullable = false,name = "category_id")
+    @Column(name = "category_id")
     private Category category;
 
 

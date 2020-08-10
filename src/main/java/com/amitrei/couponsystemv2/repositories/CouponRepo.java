@@ -22,7 +22,7 @@ public interface CouponRepo extends JpaRepository<Coupon,Integer> {
 
     List<Coupon> findAllByCompanyId(int companyID);
 
-    @Query(value = "SELECT * FROM customer_coupons WHERE coupon_id=:couponId", nativeQuery = true)
+    @Query(value = "SELECT * FROM customer_vs_coupons WHERE coupons_id=:couponId", nativeQuery = true)
     List<Integer> allCouponsPurchases(@Param("couponId") int couponId);
 
     @Query(value = "SELECT * FROM customer_vs_coupons",nativeQuery = true)

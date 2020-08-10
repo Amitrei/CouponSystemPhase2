@@ -22,6 +22,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -122,6 +123,309 @@ public class CompanyTest implements CommandLineRunner {
         at.addRule();
         String rend = at.render();
         System.out.println(rend);
+        System.out.println();
+        var col = couponRepo.findAll().toString();
+        companyLogin.addCoupon(companyAddCoupon);
+        var col2 = couponRepo.findAll().toString();
+
+
+
+        at = new AsciiTable();
+        at.getContext().setWidth(200).setFrameLeftMargin(20);
+        at.addRule();
+        at.addRow("Before adding coupon","After adding coupon").setTextAlignment(TextAlignment.CENTER);
+        at.addRule();
+        at.addRow(col,col2);
+        at.addRule();
+        rend = at.render();
+        System.out.println(rend);
+        System.out.println();
+
+
+try{
+    companyLogin.addCoupon(companyAddCoupon);
+}
+catch (AlreadyExistsException e) {
+    col = e.getMessage();
+}
+
+
+
+
+        Coupon companyCoupon2 = Coupon.builder().category(Category.FOOD).amount(100).company(companyRepo.getOne(4)).start_date(dateUtil.currentDate()).end_date(dateUtil.expiredDateFromToday(10)).description("Description").image("image.png").price(100).title("BestCoupon").build();
+        couponRepo.save(companyCoupon2);
+
+        List<String> allCoupons = couponRepo.findAll().stream().flatMap(couponOfCompany -> Stream.of("coupon id-" +couponOfCompany.getId()+" company id-" + couponOfCompany.getCompany().getId()+ " title-" +couponOfCompany.getTitle() + " ,")).collect(Collectors.toList());
+
+
+        at = new AsciiTable();
+        at.getContext().setWidth(200).setFrameLeftMargin(20);
+        at.addRule();
+        at.addRow("Adding the same coupon again","Adding a coupon with the same title but different company").setTextAlignment(TextAlignment.CENTER);
+        at.addRule();
+        at.addRow(col,allCoupons).setTextAlignment(TextAlignment.CENTER);;
+        at.addRule();
+        rend = at.render();
+        System.out.println(rend);
+
+
+        System.out.println();
+        templates.printTitle("UPDATE COUPON");
+        System.out.println();
+
+
+
+        at = new AsciiTable();
+        at.getContext().setWidth(200).setFrameLeftMargin(20);
+        at.addRule();
+        at.addRow("Updating this coupon").setTextAlignment(TextAlignment.CENTER);
+        at.addRule();
+        at.addRow(couponRepo.getOne(companyAddCoupon.getId())).setTextAlignment(TextAlignment.CENTER);;
+        at.addRule();
+        rend = at.render();
+        System.out.println(rend);
+
+
+
+        col = couponRepo.getOne(companyAddCoupon.getId()).toString();
+        companyAddCoupon.setAmount(222);
+        companyAddCoupon.setDescription("UPDATED DESCRIPTION");
+        companyAddCoupon.setImage("UPDATED IMAGE");
+        companyAddCoupon.setTitle("UPDATED TITLE");
+
+        companyLogin.updateCoupon(companyAddCoupon);
+
+        col2 = couponRepo.getOne(companyAddCoupon.getId()).toString();
+
+
+
+
+
+
+        at = new AsciiTable();
+        at.getContext().setWidth(200).setFrameLeftMargin(20);
+        at.addRule();
+        at.addRow("Before update","After update").setTextAlignment(TextAlignment.CENTER);
+        at.addRule();
+        at.addRow(col,col2).setTextAlignment(TextAlignment.CENTER);;
+        at.addRule();
+        rend = at.render();
+        System.out.println(rend);
+
+
+
+        try{
+            companyAddCoupon.setId(123421);
+        }
+        catch (IllegalActionException e ) {
+            col = e.getMessage();
+        }
+
+        try{
+            companyAddCoupon.setCompany(companyRepo.getOne(5));
+            companyLogin.updateCoupon(companyAddCoupon);
+        }
+
+        catch (IllegalActionException e) {
+            col2 = e.getMessage();
+        }
+
+
+
+
+
+        at = new AsciiTable();
+        at.getContext().setWidth(200).setFrameLeftMargin(20);
+        at.addRule();
+        at.addRow("Update coupon id","Update coupon company id").setTextAlignment(TextAlignment.CENTER);
+        at.addRule();
+        at.addRow(col,col2).setTextAlignment(TextAlignment.CENTER);;
+        at.addRule();
+        rend = at.render();
+        System.out.println(rend);
+
+
+        System.out.println();
+        templates.printTitle("DELETE COUPON");
+        System.out.println();
+
+
+        at = new AsciiTable();
+        at.getContext().setWidth(200).setFrameLeftMargin(20);
+        at.addRule();
+        at.addRow("Deleting this coupon").setTextAlignment(TextAlignment.CENTER);
+        at.addRule();
+        at.addRow(couponRepo.getOne(companyAddCoupon.getId())).setTextAlignment(TextAlignment.CENTER);;
+        at.addRule();
+        rend = at.render();
+        System.out.println(rend);
+
+
+        // Purchasing the coupon to show that delete action also deletes the purchases
+
+        Customer customer = customerRepo.getOne(4);
+        customer.getCoupons().add(companyAddCoupon);
+        customerRepo.saveAndFlush(customer);
+
+
+        at = new AsciiTable();
+        at.getContext().setWidth(200).setFrameLeftMargin(20);
+        at.addRule();
+        at.addRow("Before delete coupon list","Before delete coupon all coupons purchases").setTextAlignment(TextAlignment.CENTER);
+        at.addRule();
+        at.addRow(couponRepo.findAll(),couponRepo.allPurchases().entrySet().toString()).setTextAlignment(TextAlignment.CENTER);
+        at.addRule();
+        rend = at.render();
+        System.out.println(rend);
+
+
+        companyLogin.deleteCoupon(companyAddCoupon.getId());
+
+        at = new AsciiTable();
+        at.getContext().setWidth(200).setFrameLeftMargin(20);
+        at.addRule();
+        at.addRow("After delete coupon list","After delete coupon all coupons purchases").setTextAlignment(TextAlignment.CENTER);
+        at.addRule();
+        at.addRow(couponRepo.findAll(),couponRepo.allPurchases().entrySet().toString()).setTextAlignment(TextAlignment.CENTER);
+        at.addRule();
+        rend = at.render();
+        System.out.println(rend);
+
+
+        System.out.println();
+        templates.printTitle("GETTING ALL COUPONS");
+
+        // Adding Dummies coupons
+
+        Coupon couponDummy1 = Coupon.builder().category(Category.FOOD).amount(55).company(companyRepo.getOne(3)).start_date(dateUtil.currentDate()).end_date(dateUtil.expiredDateFromToday(10)).description("Burgers are good for your health").image("image.png").price(100).title("Burgers for free").build();
+        Coupon couponDummy2 = Coupon.builder().category(Category.VACATION).amount(100).company(companyRepo.getOne(3)).start_date(dateUtil.currentDate()).end_date(dateUtil.expiredDateFromToday(10)).description("Best experince you will ever get").image("image.png").price(20).title("Fancy Hotel").build();
+        Coupon couponDummy3 = Coupon.builder().category(Category.SPORT).amount(20).company(companyRepo.getOne(3)).start_date(dateUtil.currentDate()).end_date(dateUtil.expiredDateFromToday(10)).description("Run as fast as u can with our shoes").image("image.png").price(80).title("Running shoes").build();
+
+        companyLogin.addCoupon(couponDummy1);
+        companyLogin.addCoupon(couponDummy2);
+        companyLogin.addCoupon(couponDummy3);
+
+
+
+        at = new AsciiTable();
+        at.getContext().setWidth(200).setFrameLeftMargin(20);
+        at.addRule();
+        at.addRow("All coupons for company "+ companyLogin.companyDetails().getId() +"- "+ companyLogin.companyDetails().getName()).setTextAlignment(TextAlignment.CENTER);
+        at.addRule();
+
+        for(Coupon coupon : companyLogin.getCompanyCoupons()) {
+            at.addRow(coupon).setTextAlignment(TextAlignment.CENTER);
+            at.addRule();
+
+        }
+
+        rend = at.render();
+        System.out.println(rend);
+
+
+        System.out.println();
+        templates.printTitle("ALL COUPON BY CATEGORY");
+
+        at = new AsciiTable();
+        at.getContext().setWidth(200).setFrameLeftMargin(20);
+        at.addRule();
+        at.addRow("All coupons for company by category "+ Category.SPORT).setTextAlignment(TextAlignment.CENTER);
+        at.addRule();
+
+        for(Coupon coupon : companyLogin.getCompanyCoupons(Category.SPORT)) {
+            at.addRow(coupon).setTextAlignment(TextAlignment.CENTER);
+            at.addRule();
+
+        }
+
+        rend = at.render();
+        System.out.println(rend);
+        at = new AsciiTable();
+        at.getContext().setWidth(200).setFrameLeftMargin(20);
+        at.addRule();
+        at.addRow("All coupons for company by category "+ Category.FOOD).setTextAlignment(TextAlignment.CENTER);
+        at.addRule();
+
+        for(Coupon coupon : companyLogin.getCompanyCoupons(Category.FOOD)) {
+            at.addRow(coupon).setTextAlignment(TextAlignment.CENTER);
+            at.addRule();
+
+        }
+
+        rend = at.render();
+        System.out.println(rend);
+
+
+        System.out.println();
+        templates.printTitle("ALL COUPONS BY PRICE");
+
+
+
+
+        at = new AsciiTable();
+        at.getContext().setWidth(200).setFrameLeftMargin(20);
+        at.addRule();
+        at.addRow("All coupons for company by price: 100").setTextAlignment(TextAlignment.CENTER);
+        at.addRule();
+
+        for(Coupon coupon : companyLogin.getCompanyCoupons(100)) {
+            at.addRow(coupon).setTextAlignment(TextAlignment.CENTER);
+            at.addRule();
+
+        }
+
+        rend = at.render();
+        System.out.println(rend);
+
+
+
+        at = new AsciiTable();
+        at.getContext().setWidth(200).setFrameLeftMargin(20);
+        at.addRule();
+        at.addRow("All coupons for company by price: 50").setTextAlignment(TextAlignment.CENTER);
+        at.addRule();
+
+        for(Coupon coupon : companyLogin.getCompanyCoupons(50)) {
+            at.addRow(coupon).setTextAlignment(TextAlignment.CENTER);
+            at.addRule();
+
+        }
+
+        rend = at.render();
+        System.out.println(rend);
+
+
+        System.out.println();
+        templates.printTitle("COMPANY DETAILS");
+        System.out.println();
+
+        // Deleting all dummies coupon
+        companyLogin.deleteCoupon(couponDummy1.getId());
+        companyLogin.deleteCoupon(couponDummy2.getId());
+
+
+        Company currentCompany = companyLogin.companyDetails();
+
+        at = new AsciiTable();
+        at.getContext().setWidth(200).setFrameLeftMargin(20);
+        at.addRule();
+        at.addRow("Company details").setTextAlignment(TextAlignment.CENTER);
+        at.addRule();
+        at.addRow(currentCompany).setTextAlignment(TextAlignment.CENTER);
+        at.addRule();
+        rend = at.render();
+        System.out.println(rend);
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -129,6 +433,8 @@ public class CompanyTest implements CommandLineRunner {
 
 
     }
+
+
 
 
 
