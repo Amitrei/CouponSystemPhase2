@@ -1,6 +1,5 @@
 package com.amitrei.couponsystemv2.clr;
 
-import com.amitrei.couponsystemv2.beans.Category;
 import com.amitrei.couponsystemv2.beans.Company;
 import com.amitrei.couponsystemv2.beans.Coupon;
 import com.amitrei.couponsystemv2.repositories.CompanyRepo;
@@ -12,13 +11,17 @@ import com.amitrei.couponsystemv2.services.CompanyService;
 import com.amitrei.couponsystemv2.services.CustomerService;
 import com.amitrei.couponsystemv2.utils.CouponExpirationDailyJob;
 import com.amitrei.couponsystemv2.utils.DateUtil;
+import de.vandermeer.asciitable.AsciiTable;
+import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-//@Component
-//@Order(1)
+import java.util.ArrayList;
+
+@Component
+@Order(4)
 public class DailyJobTest implements CommandLineRunner {
 
     @Autowired
@@ -42,6 +45,8 @@ public class DailyJobTest implements CommandLineRunner {
     @Autowired
     private CustomerService customerService;
 
+    @Autowired
+    private Templates templates;
 
     @Autowired
     private DateUtil dateUtil;
@@ -58,33 +63,45 @@ public class DailyJobTest implements CommandLineRunner {
          *
          */
 
-        initTestTitle();
-        System.out.println(" Adding an a expired coupon to make sure thread is working:");
-        System.out.println("### All coupons before init thread : ");
-        System.out.println(couponRepo.findAll());
-
+        templates.dailyJobTest();
         System.out.println();
-        System.out.println("### Init daily thread , all coupons after init: ");
+
+        AsciiTable at = new AsciiTable();
+        at.getContext().setWidth(200).setFrameLeftMargin(20);
+        at.addRule();
+        at.addRow("List of coupon before initiate the daily job").setTextAlignment(TextAlignment.CENTER);
+        at.addRule();
+        for (Coupon coupon : couponRepo.findAll()) {
+            at.addRow("Coupon id - " + coupon.getId() + " , Coupon end date " + coupon.getEnd_date()).setTextAlignment(TextAlignment.CENTER);
+            at.addRule();
+        }
+
+
+        Coupon coupon = couponRepo.getOne(9);
+        coupon.setEnd_date(dateUtil.expiredDateFromToday(-100));
+        couponRepo.saveAndFlush(coupon);
+
+
+        String rend = at.render();
+        System.out.println(rend);
         Thread t1 = new Thread(couponExpirationDailyJob);
-//        t1.start();
-//        Thread.sleep(3000);
-        System.out.println(couponRepo.findAll());
-        System.out.println();
-        System.out.println();
+        t1.start();
+        Thread.sleep(3000);
+
+        at = new AsciiTable();
+        at.getContext().setWidth(200).setFrameLeftMargin(20);
+        at.addRule();
+        at.addRow("List of coupon after initiate the daily job").setTextAlignment(TextAlignment.CENTER);
+        at.addRule();
+        for (Coupon coupon2 : couponRepo.findAll()) {
+            at.addRow("Coupon id - " + coupon2.getId() + " , Coupon end date " + coupon2.getEnd_date()).setTextAlignment(TextAlignment.CENTER);
+            at.addRule();
+        }
+        rend = at.render();
+        System.out.println(rend);
+
+
     }
 
-    private void initTestTitle() {
-        System.out.println("\n" +
-                "                                                                                                                                                                                                                   \n" +
-                "                                                                                                                                                                                                                   \n" +
-                "                `7MMF'    `7MN.   `7MF'    `7MMF'    MMP\"\"MM\"\"YMM     `7MMF'          db          MMP\"\"MM\"\"YMM     `7MM\"\"\"YMM                          MMP\"\"MM\"\"YMM     `7MM\"\"\"YMM       .M\"\"\"bgd     MMP\"\"MM\"\"YMM \n" +
-                "                  MM        MMN.    M        MM      P'   MM   `7       MM           ;MM:         P'   MM   `7       MM    `7                          P'   MM   `7       MM    `7      ,MI    \"Y     P'   MM   `7 \n" +
-                "                  MM        M YMb   M        MM           MM            MM          ,V^MM.             MM            MM   d                                 MM            MM   d        `MMb.              MM      \n" +
-                "                  MM        M  `MN. M        MM           MM            MM         ,M  `MM             MM            MMmmMM                                 MM            MMmmMM          `YMMNq.          MM      \n" +
-                "                  MM        M   `MM.M        MM           MM            MM         AbmmmqMA            MM            MM   Y  ,                              MM            MM   Y  ,     .     `MM          MM      \n" +
-                "                  MM        M     YMM        MM           MM            MM        A'     VML           MM            MM     ,M                              MM            MM     ,M     Mb     dM          MM      \n" +
-                "                .JMML.    .JML.    YM      .JMML.       .JMML.        .JMML.    .AMA.   .AMMA.       .JMML.        .JMMmmmmMMM                            .JMML.        .JMMmmmmMMM     P\"Ybmmd\"         .JMML.    \n" +
-                "                                                                                                                                                                                                                   \n" +
-                "                                                                                                                                                                                                                   \n");
-    }
+
 }

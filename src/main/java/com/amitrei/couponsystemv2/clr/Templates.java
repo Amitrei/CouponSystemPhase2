@@ -97,37 +97,22 @@ public class Templates {
                 "                                                                                                                                                                                              ");
     }
 
-    protected void initTestTitle() {
+    protected void dailyJobTest() {
         System.out.println("\n" +
-                "                                                                                                                                                                                                                   \n" +
-                "                                                                                                                                                                                                                   \n" +
-                "                `7MMF'    `7MN.   `7MF'    `7MMF'    MMP\"\"MM\"\"YMM     `7MMF'          db          MMP\"\"MM\"\"YMM     `7MM\"\"\"YMM                          MMP\"\"MM\"\"YMM     `7MM\"\"\"YMM       .M\"\"\"bgd     MMP\"\"MM\"\"YMM \n" +
-                "                  MM        MMN.    M        MM      P'   MM   `7       MM           ;MM:         P'   MM   `7       MM    `7                          P'   MM   `7       MM    `7      ,MI    \"Y     P'   MM   `7 \n" +
-                "                  MM        M YMb   M        MM           MM            MM          ,V^MM.             MM            MM   d                                 MM            MM   d        `MMb.              MM      \n" +
-                "                  MM        M  `MN. M        MM           MM            MM         ,M  `MM             MM            MMmmMM                                 MM            MMmmMM          `YMMNq.          MM      \n" +
-                "                  MM        M   `MM.M        MM           MM            MM         AbmmmqMA            MM            MM   Y  ,                              MM            MM   Y  ,     .     `MM          MM      \n" +
-                "                  MM        M     YMM        MM           MM            MM        A'     VML           MM            MM     ,M                              MM            MM     ,M     Mb     dM          MM      \n" +
-                "                .JMML.    .JML.    YM      .JMML.       .JMML.        .JMML.    .AMA.   .AMMA.       .JMML.        .JMMmmmmMMM                            .JMML.        .JMMmmmmMMM     P\"Ybmmd\"         .JMML.    \n" +
-                "                                                                                                                                                                                                                   \n" +
-                "                                                                                                                                                                                                                   \n");
+                "                                                                                                                                                                                                                      \n" +
+                "                                                                                                                                                                                                                      \n" +
+                "            `7MM\"\"\"Yb.             db          `7MMF'    `7MMF'          `YMM'   `MM'                   `7MMF'      .g8\"\"8q.       `7MM\"\"\"Yp,             MMP\"\"MM\"\"YMM     `7MM\"\"\"YMM       .M\"\"\"bgd     MMP\"\"MM\"\"YMM \n" +
+                "              MM    `Yb.          ;MM:           MM        MM              VMA   ,V                       MM      .dP'    `YM.       MM    Yb             P'   MM   `7       MM    `7      ,MI    \"Y     P'   MM   `7 \n" +
+                "              MM     `Mb         ,V^MM.          MM        MM               VMA ,V                        MM      dM'      `MM       MM    dP                  MM            MM   d        `MMb.              MM      \n" +
+                "              MM      MM        ,M  `MM          MM        MM                VMMP                         MM      MM        MM       MM\"\"\"bg.                  MM            MMmmMM          `YMMNq.          MM      \n" +
+                "              MM     ,MP        AbmmmqMA         MM        MM      ,          MM                          MM      MM.      ,MP       MM    `Y                  MM            MM   Y  ,     .     `MM          MM      \n" +
+                "              MM    ,dP'       A'     VML        MM        MM     ,M          MM                     (O)  MM      `Mb.    ,dP'       MM    ,9                  MM            MM     ,M     Mb     dM          MM      \n" +
+                "            .JMMmmmdP'       .AMA.   .AMMA.    .JMML.    .JMMmmmmMMM        .JMML.                    Ymmm9         `\"bmmd\"'       .JMMmmmd9                 .JMML.        .JMMmmmmMMM     P\"Ybmmd\"         .JMML.    \n" +
+                "                                                                                                                                                                                                                      \n" +
+                "                                                                                                                                                                                                                      \n");
     }
 
 
-    protected void printCloseTest() {
-
-        System.out.println("\n" +
-                "                                                                                                                                                                                                       \n" +
-                "                                                                                                                                                                                                       \n" +
-                "                      .g8\"\"\"bgd     `7MMF'            .g8\"\"8q.        .M\"\"\"bgd     `7MMF'    `7MN.   `7MF'      .g8\"\"\"bgd                  MMP\"\"MM\"\"YMM     `7MM\"\"\"YMM       .M\"\"\"bgd     MMP\"\"MM\"\"YMM \n" +
-                "                    .dP'     `M       MM            .dP'    `YM.     ,MI    \"Y       MM        MMN.    M      .dP'     `M                  P'   MM   `7       MM    `7      ,MI    \"Y     P'   MM   `7 \n" +
-                "                    dM'       `       MM            dM'      `MM     `MMb.           MM        M YMb   M      dM'       `                       MM            MM   d        `MMb.              MM      \n" +
-                "                    MM                MM            MM        MM       `YMMNq.       MM        M  `MN. M      MM                                MM            MMmmMM          `YMMNq.          MM      \n" +
-                "                    MM.               MM      ,     MM.      ,MP     .     `MM       MM        M   `MM.M      MM.    `7MMF'                     MM            MM   Y  ,     .     `MM          MM      \n" +
-                "                    `Mb.     ,'       MM     ,M     `Mb.    ,dP'     Mb     dM       MM        M     YMM      `Mb.     MM                       MM            MM     ,M     Mb     dM          MM      \n" +
-                "                      `\"bmmmd'      .JMMmmmmMMM       `\"bmmd\"'       P\"Ybmmd\"      .JMML.    .JML.    YM        `\"bmmmdPY                     .JMML.        .JMMmmmmMMM     P\"Ybmmd\"         .JMML.    \n" +
-                "                                                                                                                                                                                                       \n" +
-                "                                                                                                                                                                                                       \n");
-    }
 
     protected void addCustomerDummy() {
 

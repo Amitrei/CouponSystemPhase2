@@ -7,6 +7,7 @@ import com.amitrei.couponsystemv2.repositories.CustomerRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+
 import java.util.List;
 
 
@@ -31,7 +32,7 @@ public class CouponExpirationDailyJob implements Runnable {
 
 
         while (!quit) {
-//            deleteExpiredCoupon();
+            deleteExpiredCoupon();
         }
 
         try {
@@ -48,24 +49,19 @@ public class CouponExpirationDailyJob implements Runnable {
     }
 
 
-//    public void deleteExpiredCoupon() {
-//        List<Coupon> allCoupons = couponRepo.findAll();
-//        for (Coupon coupon : allCoupons) {
-//
-//            if (dateUtil.isDatePassed(coupon.getEnd_date())) {
-//
-//                for (Customer couponOwner : coupon.getCustomers()) {
-//
-//                    couponOwner.getCoupons().removeIf(coupon1 -> coupon1.getId() == coupon.getId());
-//                    customerRepo.saveAndFlush(couponOwner);
-//
-//                }
-//
-//                couponRepo.delete(coupon);
-//
-//            }
-//
-//        }
-//
-//    }
+    public void deleteExpiredCoupon() {
+
+        List<Coupon> allCoupons = couponRepo.findAll();
+        for (Coupon coupon : allCoupons) {
+
+            if (dateUtil.isDatePassed(coupon.getEnd_date())) {
+
+                couponRepo.deletePurchase(coupon.getId());
+                couponRepo.delete(coupon);
+
+            }
+
+        }
+
+    }
 }

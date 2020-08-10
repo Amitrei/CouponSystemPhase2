@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Component
-@Order(3)
+@Order(2)
 public class CompanyTest implements CommandLineRunner {
 
     @Autowired

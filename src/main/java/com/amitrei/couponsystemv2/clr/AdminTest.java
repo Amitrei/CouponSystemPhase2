@@ -29,7 +29,7 @@ import java.util.List;
 
 
 @Component
-@Order(2)
+@Order(1)
 public class AdminTest implements CommandLineRunner {
 
     @Autowired
@@ -213,30 +213,31 @@ public class AdminTest implements CommandLineRunner {
 
         Customer customer = Customer.builder().email("amitrei@").firstName("amit").lastName("asas").password("123213").coupons(new ArrayList<>()).build();
 
-        customer.getCoupons().add(coupon);
-        couponRepo.save(coupon);
         customerRepo.save(customer);
+        couponRepo.save(coupon);
+        customer.getCoupons().add(coupon);
+        customerRepo.saveAndFlush(customer);
 
 
         col1 = companyRepo.getOne(company.getId()).toString();
-        col2 = customerRepo.getOne(customer.getId()).toString();
+        col2 = couponRepo.allPurchases().entrySet().toString();
 
         adminService.deleteCompany(company.getId());
 
         String col1After = companyRepo.findAll().toString();
-        var col2After = customerRepo.getOne(customer.getId()).toString();
+        var col2After = couponRepo.allPurchases().entrySet().toString();
 
 
         at = new AsciiTable();
         at.getContext().setWidth(200).setFrameLeftMargin(20);
         at.addRule();
-        at.addRow("Company from DB before delete", "Customers who purchased the coupon").setTextAlignment(TextAlignment.CENTER);
+        at.addRow("Company from DB before delete", "Customers vs coupons before delete").setTextAlignment(TextAlignment.CENTER);
         at.addRule();
-        at.addRow(col1, col2).setTextAlignment(TextAlignment.CENTER);
+        at.addRow(col1,col2).setTextAlignment(TextAlignment.CENTER);
         at.addRule();
-        at.addRow("Company list from DB After delete", "Customer who purchased the coupon").setTextAlignment(TextAlignment.CENTER);
+        at.addRow("Company list from DB After delete", "Customers vs coupons after delete").setTextAlignment(TextAlignment.CENTER);
         at.addRule();
-        at.addRow(col1After, col2After).setTextAlignment(TextAlignment.CENTER);
+        at.addRow(col1After,col2After).setTextAlignment(TextAlignment.CENTER);
         at.addRule();
         rend = at.render();
         System.out.println(rend);
