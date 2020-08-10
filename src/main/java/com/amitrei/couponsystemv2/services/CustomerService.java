@@ -8,6 +8,8 @@ import com.amitrei.couponsystemv2.beans.Customer;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -40,9 +42,8 @@ public class CustomerService extends ClientServices {
     }
 
 
-
-
     public void purchaseCoupon(Coupon coupon) throws IllegalActionException {
+
 
         if (coupon.getAmount() <= 0)
             throw new IllegalActionException("coupon is out of stock");
@@ -51,20 +52,27 @@ public class CustomerService extends ClientServices {
 
             throw new IllegalActionException("coupon is already expired");
 
-        if (currentCustomer.getCoupons().contains(coupon))
-            throw new IllegalActionException("customer already purchased this coupon");
+
+
+        // .contains does not work
+        for (Coupon customerCoupon : currentCustomer.getCoupons()) {
+            if (customerCoupon.getId() == coupon.getId())
+                throw new IllegalActionException("customer already purchased this coupon");
+        }
 
 
         coupon.setAmount(coupon.getAmount() - 1);
         couponRepo.saveAndFlush(coupon);
-        Customer customerFromDB = customerRepo.getOne(customerId);
+
+        Customer customerFromDB= customerRepo.getOne(currentCustomer.getId());
         customerFromDB.getCoupons().add(coupon);
-        customerRepo.save(customerFromDB);
-        currentCustomer = customerFromDB;
+
+        customerRepo.saveAndFlush(customerFromDB);
+        currentCustomer.setCoupons(customerFromDB.getCoupons());
     }
 
 
-    public Set<Coupon> getCustomerCoupons() {
+    public List<Coupon> getCustomerCoupons() {
         return currentCustomer.getCoupons();
     }
 

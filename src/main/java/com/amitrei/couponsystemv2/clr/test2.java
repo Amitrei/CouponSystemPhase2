@@ -63,7 +63,7 @@ public class test2 implements CommandLineRunner {
 
 
         Customer customer= Customer.builder().firstName("Amit").lastName("Rei").password("1234").email("Amitrei@gmail.com")
-                .          coupons(new HashSet<>()).build();
+                .          coupons(new ArrayList<>()).build();
 
         Coupon coupon = Coupon.builder().amount(100).category(Category.FOOD).description("adsadas")
                 .end_date(dateUtil.expiredDateFromToday(10)).start_date(dateUtil.currentDate()).image("image")

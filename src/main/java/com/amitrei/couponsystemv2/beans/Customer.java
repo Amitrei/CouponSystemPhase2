@@ -33,9 +33,11 @@ public class Customer {
     private String password;
 
 
-    @OneToMany()
+
+    @ManyToMany
     @JoinTable(name = "customer_vs_coupons")
-    private Set<Coupon> coupons = new HashSet<>();
+
+    private List<Coupon> coupons = new ArrayList<>();
 
     public void setId(int id) throws IllegalActionException {
 

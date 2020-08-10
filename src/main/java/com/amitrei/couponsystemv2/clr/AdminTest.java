@@ -23,6 +23,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -210,7 +211,7 @@ public class AdminTest implements CommandLineRunner {
         coupon.setCategory(Category.FOOD);
 
 
-        Customer customer = Customer.builder().email("amitrei@").firstName("amit").lastName("asas").password("123213").coupons(new HashSet<>()).build();
+        Customer customer = Customer.builder().email("amitrei@").firstName("amit").lastName("asas").password("123213").coupons(new ArrayList<>()).build();
 
         customer.getCoupons().add(coupon);
         couponRepo.save(coupon);
@@ -242,7 +243,7 @@ public class AdminTest implements CommandLineRunner {
         System.out.println();
         System.out.println();
 
-        customer.setCoupons(new HashSet<>());
+        customer.setCoupons(new ArrayList<>());
         customerRepo.delete(customer);
 
 
@@ -282,7 +283,7 @@ public class AdminTest implements CommandLineRunner {
         templates.printTitle("ADDING NEW CUSTOMER");
 
         col1 = customerRepo.findAll().toString();
-        customer = Customer.builder().email("HiItsMoshe@gmail.com").firstName("Moshe").lastName("Cohen").password("123213").coupons(new HashSet<>()).build();
+        customer = Customer.builder().email("HiItsMoshe@gmail.com").firstName("Moshe").lastName("Cohen").password("123213").coupons(new ArrayList<>()).build();
         try {
             adminService.addCustomer(customer);
         } catch (AlreadyExistsException e) {
@@ -290,7 +291,7 @@ public class AdminTest implements CommandLineRunner {
         }
 
         col2 = customerRepo.findAll().toString();
-        customer = Customer.builder().email("HiItsMoshe@gmail.com").firstName("Moshiko").lastName("Plotke").password("123213").coupons(new HashSet<>()).build();
+        customer = Customer.builder().email("HiItsMoshe@gmail.com").firstName("Moshiko").lastName("Plotke").password("123213").coupons(new ArrayList<>()).build();
 
         try {
             adminService.addCustomer(customer);
