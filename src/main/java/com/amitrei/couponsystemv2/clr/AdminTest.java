@@ -14,7 +14,7 @@ import com.amitrei.couponsystemv2.security.LoginManager;
 import com.amitrei.couponsystemv2.services.AdminService;
 import com.amitrei.couponsystemv2.services.CompanyService;
 import com.amitrei.couponsystemv2.services.CustomerService;
-import com.amitrei.couponsystemv2.utils.CouponExpirationDailyJob;
+import com.amitrei.couponsystemv2.schedules.CouponExpirationDailyJob;
 import com.amitrei.couponsystemv2.utils.DateUtil;
 import de.vandermeer.asciitable.AsciiTable;
 import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
@@ -24,7 +24,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 
@@ -107,33 +106,66 @@ public class AdminTest implements CommandLineRunner {
         System.out.println();
         System.out.println();
 
+        String beforeAdded=companyRepo.findAll().toString();
         templates.printTitle("ADDING NEW COMPANY");
          company = Company.builder().name("Coca-cola").email("Coca-cola@gmail.com").password("1234").build();
         adminService.addCompany(company);
-        System.out.println(companyRepo.findAll());
-        System.out.println();
 
+
+        AsciiTable at = new AsciiTable();
+        at.getContext().setWidth(200).setFrameLeftMargin(20);
+        at.addRule();
+        at.addRow("Before Adding DB", "After Adding DB").setTextAlignment(TextAlignment.CENTER);
+        at.addRule();
+        at.addRow(beforeAdded,companyRepo.findAll());
+        at.addRule();
+        String rend = at.render();
+        System.out.println(rend);
+
+
+        // changing email to makesure name is throwing the exception
         company.setEmail("abracadbra@gmail.com");
-        System.out.println("### Trying to add the company with the same name:");
 
 
+
+
+        String sameNameError=null;
         try {
             adminService.addCompany(company);
         } catch (AlreadyExistsException e) {
-            System.out.println(e.getMessage());
+            sameNameError=e.getMessage();
         }
+
+
+
 
         System.out.println();
         company.setEmail("Coca-cola@gmail.com");
         company.setName("changedName");
-        System.out.println("### Trying to add the company with the same email:");
 
 
+
+
+
+        String sameEmailError=null;
         try {
             adminService.addCompany(company);
         } catch (AlreadyExistsException e) {
-            System.out.println(e.getMessage());
+          sameEmailError=e.getMessage();
         }
+
+
+        at = new AsciiTable();
+        at.getContext().setWidth(200).setFrameLeftMargin(20);
+        at.addRule();
+        at.addRow("Adding a company with the same name", "Adding the company with the same email").setTextAlignment(TextAlignment.CENTER);
+        at.addRule();
+        at.addRow(sameNameError,sameEmailError).setTextAlignment(TextAlignment.CENTER);
+        at.addRule();
+        rend = at.render();
+        System.out.println(rend);
+
+
 
         System.out.println();
         System.out.println();
@@ -152,14 +184,14 @@ public class AdminTest implements CommandLineRunner {
         var col2 = companyRepo.getOne(company.getId()).toString();
 
 
-        AsciiTable at = new AsciiTable();
+        at = new AsciiTable();
         at.getContext().setWidth(200).setFrameLeftMargin(20);
         at.addRule();
         at.addRow("Before Update from DB", "After Update from DB").setTextAlignment(TextAlignment.CENTER);
         at.addRule();
         at.addRow(col1, col2);
         at.addRule();
-        String rend = at.render();
+         rend = at.render();
         System.out.println(rend);
 
 

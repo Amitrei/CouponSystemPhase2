@@ -12,18 +12,15 @@ import com.amitrei.couponsystemv2.services.AdminService;
 import com.amitrei.couponsystemv2.services.ClientServices;
 import com.amitrei.couponsystemv2.services.CompanyService;
 import com.amitrei.couponsystemv2.services.CustomerService;
-import com.amitrei.couponsystemv2.utils.CouponExpirationDailyJob;
+import com.amitrei.couponsystemv2.schedules.CouponExpirationDailyJob;
 import com.amitrei.couponsystemv2.utils.DateUtil;
 import de.vandermeer.asciitable.AsciiTable;
 import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
-import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -155,7 +152,7 @@ catch (AlreadyExistsException e) {
         Coupon companyCoupon2 = Coupon.builder().category(Category.FOOD).amount(100).company(companyRepo.getOne(4)).start_date(dateUtil.currentDate()).end_date(dateUtil.expiredDateFromToday(10)).description("Description").image("image.png").price(100).title("BestCoupon").build();
         couponRepo.save(companyCoupon2);
 
-        List<String> allCoupons = couponRepo.findAll().stream().flatMap(couponOfCompany -> Stream.of("coupon id-" +couponOfCompany.getId()+" company id-" + couponOfCompany.getCompany().getId()+ " title-" +couponOfCompany.getTitle() + " ,")).collect(Collectors.toList());
+        List<String> allCoupons = couponRepo.findAll().stream().flatMap(couponOfCompany -> Stream.of("[ coupon id-" +couponOfCompany.getId()+" , company id-" + couponOfCompany.getCompany().getId()+ " , title-" +couponOfCompany.getTitle() + "]")).collect(Collectors.toList());
 
 
         at = new AsciiTable();

@@ -9,7 +9,7 @@ import com.amitrei.couponsystemv2.security.LoginManager;
 import com.amitrei.couponsystemv2.services.AdminService;
 import com.amitrei.couponsystemv2.services.CompanyService;
 import com.amitrei.couponsystemv2.services.CustomerService;
-import com.amitrei.couponsystemv2.utils.CouponExpirationDailyJob;
+import com.amitrei.couponsystemv2.schedules.CouponExpirationDailyJob;
 import com.amitrei.couponsystemv2.utils.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -47,9 +47,22 @@ public class Templates {
     @Autowired
     private CouponExpirationDailyJob couponExpirationDailyJob;
 
+    public static final String RED = "\033[0;31m";
+    public static final String RESET = "\033[0m";
+    public static final String WHITE_UNDERLINED = "\033[4;37m";  // WHITE
+    public static final String BLACK_BOLD = "\033[1;30m";  // BLACK
+    public static final String RED_BOLD = "\033[1;31m";    // RED
+    public static final String GREEN_BOLD = "\033[1;32m";  // GREEN
+    public static final String YELLOW_BOLD = "\033[1;33m"; // YELLOW
+    public static final String BLUE_BOLD = "\033[1;34m";   // BLUE
+    public static final String PURPLE_BOLD = "\033[1;35m"; // PURPLE
+    public static final String CYAN_BOLD = "\033[1;36m";   // CYAN
+    public static final String WHITE_BOLD = "\033[1;37m";  // WHITE
+
+
     protected void printTitle (String title) {
         System.out.println();
-        System.out.println("**************************************************************************************       ~          " + title + "              ~          *************************************************************************************************************************************************************************************************");
+        System.out.println("**************************************************************************************       ~          "+BLACK_BOLD + title + RESET +"              ~          *************************************************************************************************************************************************************************************************");
         System.out.println();
 
     }

@@ -29,25 +29,23 @@ public class LoginManager {
 
             case Administrator:
                 if (adminService.login(email, password)) return adminService;
-                else {
                     return null;
-                }
+
 
             case Company:
-
                 if (companyService.login(email, password)) return companyService;
-                else {
                     return null;
-                }
+
 
             case Customer:
                 if (customerService.login(email, password)) return customerService;
-                else {
                     return null;
-                }
 
-            default:
-                return null;
+
+
+            default: return null;
+
+
         }
 
     }

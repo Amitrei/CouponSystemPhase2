@@ -25,18 +25,19 @@ public class CustomerService extends ClientServices {
     public boolean login(String email, String password) throws IllegalActionException {
 
 
-        Customer customer = customerRepo.findByEmail(email);
 
         if (!customerRepo.existsByEmail(email))
             throw new IllegalActionException("Incorrect email address");
 
 
-        else if (!customer.getPassword().equals(password))
-            throw new IllegalActionException("Incorrect password");
+        Customer customer = customerRepo.findByEmail(email);
+
+
+            if (!customer.getPassword().equals(password))
+                throw new IllegalActionException("Incorrect password");
 
 
         this.currentCustomer = customer;
-        customer = null;
         this.customerId = currentCustomer.getId();
         return true;
     }

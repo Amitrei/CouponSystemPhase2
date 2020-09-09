@@ -9,7 +9,6 @@ import com.amitrei.couponsystemv2.beans.Coupon;
 import com.amitrei.couponsystemv2.beans.Customer;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -55,16 +54,12 @@ public class AdminService extends ClientServices {
 
     public void updateCompany(Company company) throws IllegalActionException, DoesNotExistsException {
 
-
-
         if (!companyRepo.existsById(company.getId()))
             throw new DoesNotExistsException("company");
 
         if (!companyRepo.getOne(company.getId()).getName().equals(company.getName())) {
             throw new IllegalActionException("cannot change company name");
         }
-
-
 
         companyRepo.saveAndFlush(company);
 
@@ -74,18 +69,12 @@ public class AdminService extends ClientServices {
     public void deleteCompany(int companyID) throws DoesNotExistsException {
 
         if (!companyRepo.existsById(companyID)) throw new DoesNotExistsException("company");
-
-
         Company thisCompany = companyRepo.getOne(companyID);
 
 
         if (thisCompany.getCoupons().size() > 0) {
 
-            for (Coupon coupon : thisCompany.getCoupons()) {
-                couponRepo.deletePurchase(coupon.getId());
-            }
-
-
+            for (Coupon coupon : thisCompany.getCoupons()) { couponRepo.deletePurchase(coupon.getId()); }
         }
 
         companyRepo.delete(thisCompany);
@@ -109,17 +98,13 @@ public class AdminService extends ClientServices {
 
 
     public void updateCustomer(Customer customer) {
-
         // Checking if ID is changed in the Customer setId()
-
         customerRepo.saveAndFlush(customer);
     }
 
 
     public void deleteCustomer(int customerId) {
-
         // ManyToMany bi-directional connection will delete all customer purchases
-
         customerRepo.delete(customerRepo.getOne(customerId));
 
     }

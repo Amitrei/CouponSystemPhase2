@@ -2,12 +2,15 @@ package com.amitrei.couponsystemv2;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-public class Couponsystemv2Application {
+@EnableScheduling
+
+public class CouponSystemV2 {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Couponsystemv2Application.class, args);
+		SpringApplication.run(CouponSystemV2.class, args);
 	}
 
 }

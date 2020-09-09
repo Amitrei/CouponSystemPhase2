@@ -1,12 +1,12 @@
 package com.amitrei.couponsystemv2.beans;
 
 import com.amitrei.couponsystemv2.exceptions.IllegalActionException;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Date;
-import java.util.HashSet;
-import java.util.Set;
+
 
 @Entity
 @Data
@@ -21,14 +21,17 @@ public class Coupon {
     private int id;
 
 
+
+    @JsonIgnore
     @ManyToOne()
     private Company company;
 
-//
-//    @ManyToMany(mappedBy = "coupons")
-//    Set<Customer> customers = new HashSet<>();
 
 
+
+    // For Http post request - JSON will include the company name and avoiding dependency circulation exception.
+    @Transient
+    private String companyName;
 
 
     @Column(name = "category_id")
@@ -70,7 +73,6 @@ public class Coupon {
                 ", amount=" + amount +
                 ", price=" + price +
                 ", image='" + image + '\'' +
-//                "customers= " + customers +
                 '}';
     }
 

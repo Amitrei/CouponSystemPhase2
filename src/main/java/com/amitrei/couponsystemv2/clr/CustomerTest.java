@@ -12,7 +12,7 @@ import com.amitrei.couponsystemv2.services.AdminService;
 import com.amitrei.couponsystemv2.services.ClientServices;
 import com.amitrei.couponsystemv2.services.CompanyService;
 import com.amitrei.couponsystemv2.services.CustomerService;
-import com.amitrei.couponsystemv2.utils.CouponExpirationDailyJob;
+import com.amitrei.couponsystemv2.schedules.CouponExpirationDailyJob;
 import com.amitrei.couponsystemv2.utils.DateUtil;
 import de.vandermeer.asciitable.AsciiTable;
 import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
@@ -201,7 +201,7 @@ public class CustomerTest implements CommandLineRunner {
         at.addRule();
         at.addRow("Trying purchasing coupon with 0 amount").setTextAlignment(TextAlignment.CENTER);
         at.addRule();
-        at.addRow( "Coupon id - " + coupon.getId() + " Amount " + coupon.getAmount()).setTextAlignment(TextAlignment.CENTER);
+        at.addRow( "Coupon id - " + coupon.getId() + " , Amount " + coupon.getAmount()).setTextAlignment(TextAlignment.CENTER);
         at.addRule();
         at.addRow(getException).setTextAlignment(TextAlignment.CENTER);
         at.addRule();
@@ -231,7 +231,7 @@ public class CustomerTest implements CommandLineRunner {
         at.addRule();
         at.addRow("Trying purchasing coupon with expired date").setTextAlignment(TextAlignment.CENTER);
         at.addRule();
-        at.addRow( "Coupon id - " + coupon.getId() + " End date " + coupon.getEnd_date()).setTextAlignment(TextAlignment.CENTER);
+        at.addRow( "Coupon id - " + coupon.getId() + " , End date " + coupon.getEnd_date()).setTextAlignment(TextAlignment.CENTER);
         at.addRule();
         at.addRow(getException).setTextAlignment(TextAlignment.CENTER);
         at.addRule();
@@ -267,7 +267,7 @@ public class CustomerTest implements CommandLineRunner {
 
         for(Coupon customerCoupon : customerLogin.getCustomerCoupons()) {
 
-            at.addRow("Coupon id - "+customerCoupon.getId() + " Coupon title - " + customerCoupon.getTitle() + " Coupon description - " +customerCoupon.getDescription()).setTextAlignment(TextAlignment.CENTER);
+            at.addRow("Coupon id - "+customerCoupon.getId() + " , Coupon title - " + customerCoupon.getTitle() + " , Coupon description - " +customerCoupon.getDescription()).setTextAlignment(TextAlignment.CENTER);
             at.addRule();
         }
         rend = at.render();
@@ -317,7 +317,7 @@ public class CustomerTest implements CommandLineRunner {
         at = new AsciiTable();
         at.getContext().setWidth(200).setFrameLeftMargin(20);
         at.addRule();
-        at.addRow("All customer Coupons by price 100:" + Category.VACATION).setTextAlignment(TextAlignment.CENTER);
+        at.addRow("All customer Coupons by price 100:").setTextAlignment(TextAlignment.CENTER);
         at.addRule();
 
         for(Coupon customerCoupon : customerLogin.getCustomerCoupons(100)) {
@@ -332,7 +332,7 @@ public class CustomerTest implements CommandLineRunner {
         at = new AsciiTable();
         at.getContext().setWidth(200).setFrameLeftMargin(20);
         at.addRule();
-        at.addRow("All customer Coupons by price 60:" + Category.VACATION).setTextAlignment(TextAlignment.CENTER);
+        at.addRow("All customer Coupons by price 60:").setTextAlignment(TextAlignment.CENTER);
         at.addRule();
 
         for(Coupon customerCoupon : customerLogin.getCustomerCoupons(60)) {

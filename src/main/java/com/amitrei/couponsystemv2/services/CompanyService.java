@@ -85,8 +85,6 @@ public class CompanyService extends ClientServices {
 
         couponRepo.deleteById(couponId);
         couponRepo.deletePurchase(couponId);
-
-        // Removing coupon from local pojo list
         currentCompany.getCoupons().removeIf(coupon -> coupon.getId()==couponId);
 
 

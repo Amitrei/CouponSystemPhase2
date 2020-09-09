@@ -2,6 +2,7 @@ package com.amitrei.couponsystemv2.beans;
 
 
 import com.amitrei.couponsystemv2.exceptions.IllegalActionException;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -34,6 +35,7 @@ public class Customer {
 
 
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(name = "customer_vs_coupons")
 
