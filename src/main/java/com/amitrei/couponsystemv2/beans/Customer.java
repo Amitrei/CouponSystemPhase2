@@ -38,7 +38,6 @@ public class Customer {
     @JsonIgnore
     @ManyToMany
     @JoinTable(name = "customer_vs_coupons")
-
     private List<Coupon> coupons = new ArrayList<>();
 
     public void setId(int id) throws IllegalActionException {

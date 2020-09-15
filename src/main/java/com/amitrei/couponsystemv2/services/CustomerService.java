@@ -50,7 +50,6 @@ public class CustomerService extends ClientServices {
             throw new IllegalActionException("coupon is out of stock");
 
         if (dateUtil.currentDate().after(coupon.getEnd_date()))
-
             throw new IllegalActionException("coupon is already expired");
 
 
@@ -78,21 +77,21 @@ public class CustomerService extends ClientServices {
     }
 
 
-    public Set<Coupon> getCustomerCoupons(Category category) {
+    public List<Coupon> getCustomerCoupons(Category category) {
 
-        Set<Coupon> filteredSet = currentCustomer.getCoupons().stream()
+        List<Coupon> filteredList = currentCustomer.getCoupons().stream()
                 .filter(coupon -> category.ordinal() == coupon.getCategory().ordinal())
-                .collect(Collectors.toSet());
-        return filteredSet;
+                .collect(Collectors.toList());
+        return filteredList;
     }
 
 
-    public Set<Coupon> getCustomerCoupons(double maxPrice) {
+    public List<Coupon> getCustomerCoupons(double maxPrice) {
 
-        Set<Coupon> filteredSet = currentCustomer.getCoupons().stream()
+        List<Coupon> filteredList = currentCustomer.getCoupons().stream()
                 .filter(coupon -> maxPrice >= coupon.getPrice())
-                .collect(Collectors.toSet());
-        return filteredSet;
+                .collect(Collectors.toList());
+        return filteredList;
     }
 
 

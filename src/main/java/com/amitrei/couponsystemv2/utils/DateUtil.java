@@ -24,7 +24,7 @@ public class DateUtil {
     }
 
 
-    public java.sql.Date currentDate() {
+    public  java.sql.Date currentDate() {
         Date date = new java.util.Date();
         return new java.sql.Date(date.getTime());
     }

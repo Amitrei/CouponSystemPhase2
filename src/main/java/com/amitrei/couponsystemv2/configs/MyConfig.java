@@ -8,6 +8,8 @@ import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 public class MyConfig {
+
+
     @Bean
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -23,4 +25,5 @@ public class MyConfig {
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }
+
 }

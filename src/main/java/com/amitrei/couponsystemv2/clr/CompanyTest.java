@@ -211,12 +211,12 @@ catch (AlreadyExistsException e) {
 
 
 
-        try{
-            companyAddCoupon.setId(123421);
-        }
-        catch (IllegalActionException e ) {
-            col = e.getMessage();
-        }
+//        try{
+//            companyAddCoupon.setId(123421);
+//        }
+////        catch (IllegalActionException e ) {
+////            col = e.getMessage();
+////        }
 
         try{
             companyAddCoupon.setCompany(companyRepo.getOne(5));

@@ -14,7 +14,6 @@ import java.util.List;
 @Component
 public class CouponExpirationDailyJob  {
 
-    private Boolean quit = false;
 
     @Autowired
     private CouponRepo couponRepo;

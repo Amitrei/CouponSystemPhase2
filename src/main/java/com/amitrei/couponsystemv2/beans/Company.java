@@ -1,6 +1,8 @@
 package com.amitrei.couponsystemv2.beans;
 
 import com.amitrei.couponsystemv2.exceptions.IllegalActionException;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -26,6 +28,8 @@ public class Company {
     @Column(nullable = false)
     private String password;
 
+
+    @JsonManagedReference
     @OneToMany(mappedBy = "company", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<Coupon> coupons = new ArrayList<>();
 

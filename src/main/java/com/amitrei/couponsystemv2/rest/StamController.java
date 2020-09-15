@@ -24,10 +24,10 @@ public class StamController {
     private CouponRepo couponRepo;
 
 
-    @GetMapping("/all")
-    public ResponseEntity<?> allCoupons() {
-        List<Coupon> myList = couponRepo.findAll();
-        myList.forEach(coupon -> coupon.setCompanyName(coupon.getCompany().getName()));
-        return new ResponseEntity<>(myList, HttpStatus.OK);
-    }
+//    @GetMapping("/all")
+//    public ResponseEntity<?> allCoupons() {
+//        List<Coupon> myList = couponRepo.findAll();
+//        myList.forEach(coupon -> coupon.setCompanyName(coupon.getCompany().getName()));
+//        return new ResponseEntity<>(myList, HttpStatus.OK);
+//    }
 }

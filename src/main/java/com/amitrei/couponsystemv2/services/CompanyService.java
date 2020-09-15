@@ -6,10 +6,8 @@ import com.amitrei.couponsystemv2.exceptions.IllegalActionException;
 import com.amitrei.couponsystemv2.beans.Category;
 import com.amitrei.couponsystemv2.beans.Company;
 import com.amitrei.couponsystemv2.beans.Coupon;
-import com.amitrei.couponsystemv2.beans.Customer;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -53,7 +51,7 @@ public class CompanyService extends ClientServices {
 
         }
 
-        //Saving coupon as ManyToOne bi-directional will automaticlly update the company couponlist from the DB
+        //Saving coupon as ManyToOne bi-directional will automatically update the company coupon list
         couponRepo.save(coupon);
 
         // Updating the plain object to include all new coupons.

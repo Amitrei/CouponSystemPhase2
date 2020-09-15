@@ -1,7 +1,7 @@
 package com.amitrei.couponsystemv2.beans;
 
 import com.amitrei.couponsystemv2.exceptions.IllegalActionException;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,16 +22,17 @@ public class Coupon {
 
 
 
-    @JsonIgnore
-    @ManyToOne()
+//    @JsonIgnore
+@JsonBackReference
+@ManyToOne()
     private Company company;
 
 
 
 
     // For Http post request - JSON will include the company name and avoiding dependency circulation exception.
-    @Transient
-    private String companyName;
+//    @Transient
+//    private String companyName;
 
 
     @Column(name = "category_id")
@@ -54,10 +55,10 @@ public class Coupon {
     private String image;
 
 
-
-    public void setId(int id) throws IllegalActionException {
-        throw new IllegalActionException("cannot change coupons id");
-    }
+//
+//    public void setId(int id) throws IllegalActionException {
+//        throw new IllegalActionException("cannot change coupons id");
+//    }
 
 
     @Override

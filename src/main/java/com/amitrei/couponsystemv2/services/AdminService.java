@@ -73,7 +73,6 @@ public class AdminService extends ClientServices {
 
 
         if (thisCompany.getCoupons().size() > 0) {
-
             for (Coupon coupon : thisCompany.getCoupons()) { couponRepo.deletePurchase(coupon.getId()); }
         }
 
