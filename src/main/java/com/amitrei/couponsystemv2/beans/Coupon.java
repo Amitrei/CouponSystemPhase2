@@ -30,9 +30,9 @@ public class Coupon {
 
 
 
-    // For Http post request - JSON will include the company name and avoiding dependency circulation exception.
-//    @Transient
-//    private String companyName;
+//     For Http post request - JSON will include the company name and avoiding dependency circulation exception.
+    @Transient
+    private String companyName;
 
 
     @Column(name = "category_id")

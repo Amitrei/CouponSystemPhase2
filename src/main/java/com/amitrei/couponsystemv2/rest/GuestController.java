@@ -4,6 +4,7 @@ package com.amitrei.couponsystemv2.rest;
 import com.amitrei.couponsystemv2.beans.Coupon;
 import com.amitrei.couponsystemv2.beans.Customer;
 import com.amitrei.couponsystemv2.repositories.CouponRepo;
+import com.amitrei.couponsystemv2.services.GuestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,19 +16,19 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("stam")
+@RequestMapping("guest")
 @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
-public class StamController {
+public class GuestController {
 
 
     @Autowired
-    private CouponRepo couponRepo;
+    private GuestService guestService;
 
 
-//    @GetMapping("/all")
-//    public ResponseEntity<?> allCoupons() {
-//        List<Coupon> myList = couponRepo.findAll();
-//        myList.forEach(coupon -> coupon.setCompanyName(coupon.getCompany().getName()));
-//        return new ResponseEntity<>(myList, HttpStatus.OK);
-//    }
+    @GetMapping("coupons")
+    public ResponseEntity<?> allCoupons() {
+        List<Coupon> myList = guestService.getAllCoupons();
+        myList.forEach(coupon -> coupon.setCompanyName(coupon.getCompany().getName()));
+        return new ResponseEntity<>(myList, HttpStatus.OK);
+    }
 }
