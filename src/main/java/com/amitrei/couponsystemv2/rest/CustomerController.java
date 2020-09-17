@@ -1,10 +1,7 @@
 package com.amitrei.couponsystemv2.rest;
 
 
-import com.amitrei.couponsystemv2.beans.AuthRequest;
-import com.amitrei.couponsystemv2.beans.Category;
-import com.amitrei.couponsystemv2.beans.Coupon;
-import com.amitrei.couponsystemv2.beans.Customer;
+import com.amitrei.couponsystemv2.beans.*;
 import com.amitrei.couponsystemv2.exceptions.IllegalActionException;
 import com.amitrei.couponsystemv2.security.ClientType;
 import com.amitrei.couponsystemv2.security.LoginManager;
@@ -34,9 +31,9 @@ public class CustomerController extends ClientController {
     @Override
     public ResponseEntity<?> login(@RequestBody AuthRequest authRequest) {
         try {
-
-            return new ResponseEntity<String>(loginManager.restLogin(authRequest.getEmail(), authRequest.getPassword(),
-                    ClientType.Customer), HttpStatus.ACCEPTED);
+            String token = loginManager.restLogin(authRequest.getEmail(), authRequest.getPassword(),
+                    ClientType.Customer);
+            return new ResponseEntity<AuthResponse>(new AuthResponse(token), HttpStatus.ACCEPTED);
 
         } catch (IllegalActionException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.UNAUTHORIZED);
@@ -63,6 +60,7 @@ public class CustomerController extends ClientController {
     public ResponseEntity<?> getCustomerCoupons(@RequestHeader(name = "authorization") String token) {
         if (tokenManager.isTokenValid(token)) {
             List<Coupon> customerCoupons = ((CustomerService) tokenManager.getClientService(token)).getCustomerCoupons();
+            customerCoupons.forEach(coupon -> coupon.setCompanyName(coupon.getCompany().getName()));
             return new ResponseEntity<List<Coupon>>(customerCoupons, HttpStatus.ACCEPTED);
 
         }

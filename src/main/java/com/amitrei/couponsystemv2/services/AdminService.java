@@ -117,7 +117,7 @@ public class AdminService extends ClientServices {
         return customerRepo.getOne(customerId);
     }
 
-
+    public List<Coupon> getAllCoupons(){ return couponRepo.findAll();}
 }
 
 

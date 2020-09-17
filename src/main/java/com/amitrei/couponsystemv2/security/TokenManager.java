@@ -20,17 +20,18 @@ public class TokenManager {
     private Map<String, ClientServices> tokens=new HashMap<>();
 
 
-    public String generateToken(String email,ClientServices service) {
-          String token = jwtUtil.generateToken(email);
+    public String generateToken(String email,ClientType clientType,ClientServices service) {
+          String token = jwtUtil.generateToken(email,clientType);
           tokens.put(token,service);
           return token;
     }
 
     public boolean isTokenValid(String token) {
+        token=token.substring(7);
         return ((!jwtUtil.isTokenExpired(token)) && (tokens.containsKey(token)));
     }
 
     public ClientServices getClientService(String token){
-        return tokens.get(token);
+        return tokens.get(token.substring(7));
     }
 }

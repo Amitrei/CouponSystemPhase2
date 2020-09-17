@@ -24,9 +24,9 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-@Component
-@Order(2)
+//
+//@Component
+//@Order(2)
 public class CompanyTest implements CommandLineRunner {
 
     @Autowired

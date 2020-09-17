@@ -25,7 +25,7 @@ public class CouponExpirationDailyJob  {
     private DateUtil dateUtil;
 
 
-    @Scheduled(fixedRate =(2000)) // 1000 * 60 * 60 * 24 Works but cannot be seen by the test
+    @Scheduled(fixedRate =(1000 * 60 * 60 * 24)) //  Works but cannot be seen by the test
     public void deleteExpiredCoupon() {
         List<Coupon> allCoupons = couponRepo.findAll();
         for (Coupon coupon : allCoupons) {

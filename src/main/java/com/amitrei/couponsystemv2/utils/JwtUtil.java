@@ -14,7 +14,7 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
-    private String secret = "AmitRei";
+    private String secret = "678gn4tnu3412#123124";
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -36,8 +36,9 @@ public class JwtUtil {
         return extractExpiration(token).before(new Date());
     }
 
-    public String generateToken(String username) {
+    public String generateToken(String username,ClientType clientType) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("type",clientType.toString());
         return createToken(claims, username);
     }
 
@@ -48,16 +49,17 @@ public class JwtUtil {
                 .signWith(SignatureAlgorithm.HS256, secret).compact();
     }
 
-    public Boolean validateToken(String token, String tokenEmail) {
+    public Boolean validateToken(String token, String tokenEmail, ClientType clientTypes) {
+        token=token.substring(7);
         final String email = extractUsername(token);
         final Map<String,Object> clientType = extractAllClaims(token);
          String typeValue=null;
 
-//        for(Map.Entry<String,Object> entry: clientType.entrySet()){
-//            if(entry.getKey()=="type") {
-//                typeValue=(String) entry.getValue();
-//            }
-//        }
+        for(Map.Entry<String,Object> entry: clientType.entrySet()){
+            if(entry.getKey()=="type") {
+                typeValue=(String) entry.getValue();
+            }
+        }
 
         return ((email.equals(tokenEmail)  && !isTokenExpired(token)));
     }

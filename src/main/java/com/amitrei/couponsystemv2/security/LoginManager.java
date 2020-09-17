@@ -1,7 +1,6 @@
 package com.amitrei.couponsystemv2.security;
 
 
-import antlr.Token;
 import com.amitrei.couponsystemv2.exceptions.IllegalActionException;
 import com.amitrei.couponsystemv2.services.AdminService;
 import com.amitrei.couponsystemv2.services.ClientServices;
@@ -18,7 +17,7 @@ public class LoginManager {
 
 
     @Autowired
-    private AdminService blankAdminService;
+    private AdminService adminService;
 
     @Autowired
     private ApplicationContext ctx;
@@ -37,7 +36,7 @@ public class LoginManager {
         switch (clientType) {
 
             case Administrator:
-                if (blankAdminService.login(email, password)) return blankAdminService;
+                if (adminService.login(email, password)) return adminService;
                     return null;
 
 
@@ -65,23 +64,22 @@ public class LoginManager {
         switch (clientType) {
 
             case Administrator:
-                AdminService adminService=ctx.getBean(AdminService.class);
-                if (adminService.login(email, password))  return tokenManager.generateToken(email,adminService);
+                if (adminService.login(email, password))  return tokenManager.generateToken(email,ClientType.Administrator,adminService);
 
 
-                return null;
+                return "badLogin ";
 
 
             case Company:
                 CompanyService companyService = ctx.getBean(CompanyService.class);
-                if (companyService.login(email, password)) return tokenManager.generateToken(email,companyService);
-                return null;
+                if (companyService.login(email, password)) return tokenManager.generateToken(email,ClientType.Company,companyService);
+                return "badLogin";
 
 
             case Customer:
                 CustomerService customerService = ctx.getBean(CustomerService.class);
-                if (customerService.login(email, password)) return tokenManager.generateToken(email,customerService);
-                return null;
+                if (customerService.login(email, password)) return tokenManager.generateToken(email,ClientType.Customer,customerService);
+                return "badLogin";
 
 
 

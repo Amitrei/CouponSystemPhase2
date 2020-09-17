@@ -27,8 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@Component
-@Order(1)
+//@Component
+//@Order(1)
 public class AdminTest implements CommandLineRunner {
 
     @Autowired
