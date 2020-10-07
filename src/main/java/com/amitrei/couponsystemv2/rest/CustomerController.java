@@ -46,6 +46,8 @@ public class CustomerController extends ClientController {
         if (tokenManager.isTokenValid(token)) {
             try {
                 ((CustomerService) tokenManager.getClientService(token)).purchaseCoupon(coupon);
+                System.out.println(((CustomerService) tokenManager.getClientService(token)).getCustomerCoupons());
+
                 return new ResponseEntity<Coupon>(coupon, HttpStatus.ACCEPTED);
             } catch (IllegalActionException e) {
                 return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -61,11 +63,24 @@ public class CustomerController extends ClientController {
         if (tokenManager.isTokenValid(token)) {
             List<Coupon> customerCoupons = ((CustomerService) tokenManager.getClientService(token)).getCustomerCoupons();
             customerCoupons.forEach(coupon -> coupon.setCompanyName(coupon.getCompany().getName()));
+            customerCoupons.forEach(coupon -> coupon.setIdOfCompany(coupon.getCompany().getId()));
+            System.out.println(customerCoupons);
             return new ResponseEntity<List<Coupon>>(customerCoupons, HttpStatus.ACCEPTED);
 
         }
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
+
+
+    @GetMapping("coupons/is-owned/{couponID}")
+    public ResponseEntity<?> isCouponOwned(@RequestHeader(name = "authorization") String token,@PathVariable int couponID) {
+        if (tokenManager.isTokenValid(token)) {
+            return new ResponseEntity<Boolean>(((CustomerService) tokenManager.getClientService(token)).isOwnCoupon(couponID), HttpStatus.ACCEPTED);
+        }
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
+    }
+
 
 
     @GetMapping("coupons-by-category/{category}")

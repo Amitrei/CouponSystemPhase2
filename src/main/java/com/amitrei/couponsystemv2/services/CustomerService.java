@@ -71,6 +71,13 @@ public class CustomerService extends ClientServices {
         currentCustomer.setCoupons(customerFromDB.getCoupons());
     }
 
+    public Boolean isOwnCoupon(int couponId ){
+        for (Coupon customerCoupon : currentCustomer.getCoupons()) {
+            if (customerCoupon.getId() == couponId)
+            return true;
+        }
+        return false;
+    }
 
     public List<Coupon> getCustomerCoupons() {
         return currentCustomer.getCoupons();
@@ -98,6 +105,5 @@ public class CustomerService extends ClientServices {
     public Customer getCustomerDetails() {
         return this.currentCustomer;
     }
-
 
 }

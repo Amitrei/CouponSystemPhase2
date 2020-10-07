@@ -22,17 +22,17 @@ public class Coupon {
 
 
 
-//    @JsonIgnore
 @JsonBackReference
 @ManyToOne()
     private Company company;
 
 
-
-
 //     For Http post request - JSON will include the company name and avoiding dependency circulation exception.
     @Transient
     private String companyName;
+
+    @Transient
+    private int idOfCompany;
 
 
     @Column(name = "category_id")
@@ -43,16 +43,25 @@ public class Coupon {
     private String title;
     @Column(nullable = false)
     private String description;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy",timezone = "GMT+3")
     @Column(nullable = false)
     private Date start_date;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy",timezone = "GMT+3")
     @Column(nullable = false)
     private Date end_date;
+
+
     @Column(nullable = false)
     private int amount;
+
     @Column(nullable = false)
     private double price;
     @Column(nullable = false)
     private String image;
+
+
 
 
 //

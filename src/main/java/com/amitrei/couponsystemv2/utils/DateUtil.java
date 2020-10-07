@@ -2,6 +2,7 @@ package com.amitrei.couponsystemv2.utils;
 
 import org.springframework.stereotype.Component;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -25,6 +26,7 @@ public class DateUtil {
 
 
     public  java.sql.Date currentDate() {
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
         Date date = new java.util.Date();
         return new java.sql.Date(date.getTime());
     }

@@ -46,12 +46,13 @@ public class CompanyController extends ClientController {
     }
 
 
-    @PostMapping("add-coupon")
+    @PostMapping("coupons/add")
     public ResponseEntity<?> addCoupon(@RequestHeader(name = "authorization") String token, @RequestBody Coupon coupon) {
 
         if (tokenManager.isTokenValid(token)) {
             Coupon addedCoupon = coupon;
             coupon.setCompany( ((CompanyService) tokenManager.getClientService(token)).companyDetails());
+            coupon.setCompanyName(coupon.getCompany().getName());
             try {
                 ((CompanyService) tokenManager.getClientService(token)).addCoupon(coupon);
                 return new ResponseEntity<Coupon>(coupon, HttpStatus.CREATED);
@@ -64,7 +65,7 @@ public class CompanyController extends ClientController {
     }
 
 
-    @PutMapping("update-coupon")
+    @PutMapping("coupons/update")
     public ResponseEntity<?> updateCoupon(@RequestHeader(name = "authorization") String token, @RequestBody Coupon coupon) {
         if (tokenManager.isTokenValid(token)) {
 
@@ -80,7 +81,7 @@ public class CompanyController extends ClientController {
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
-    @DeleteMapping("delete-coupon/{couponID}")
+    @DeleteMapping("coupons/delete/{couponID}")
     public ResponseEntity<?> deleteCoupon(@RequestHeader(name = "authorization") String token, @PathVariable int couponID) {
         if (tokenManager.isTokenValid(token)) {
             ((CompanyService) tokenManager.getClientService(token)).deleteCoupon(couponID);
@@ -96,8 +97,19 @@ public class CompanyController extends ClientController {
 
             List<Coupon> companyCoupons = ((CompanyService) tokenManager.getClientService(token)).getCompanyCoupons();
             companyCoupons.forEach(coupon -> coupon.setCompanyName(coupon.getCompany().getName()));
+            companyCoupons.forEach(coupon -> coupon.setIdOfCompany(coupon.getCompany().getId()));
+
 
             return new ResponseEntity<List<Coupon>>(companyCoupons, HttpStatus.ACCEPTED);
+        }
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    }
+
+
+    @GetMapping("coupons/by-title/{title}")
+    public ResponseEntity<?> isCouponExistsByTitle(@RequestHeader(name = "authorization") String token,@PathVariable String title) {
+        if (tokenManager.isTokenValid(token)) {
+              return new ResponseEntity<Boolean>(((CompanyService) tokenManager.getClientService(token)).isTitleExists(title), HttpStatus.ACCEPTED);
         }
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }

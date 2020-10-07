@@ -68,9 +68,16 @@ public class CompanyService extends ClientServices {
 
         // Comparing companies id's between coupon in DB and the new coupon
         int CompanyOfCoupon = couponRepo.getOne(coupon.getId()).getCompany().getId();
-        if (CompanyOfCoupon != coupon.getCompany().getId()) {
+        if (CompanyOfCoupon != coupon.getCompany().getId())
             throw new IllegalActionException("illegal to change company id");
-        }
+
+
+
+        if(coupon.getAmount()<=0)  throw new IllegalActionException("amount cannot be less or equal to zero.");
+        if(coupon.getPrice()<=0)  throw new IllegalActionException("price cannot be less or equal to zero.");
+
+
+
 
 
         couponRepo.saveAndFlush(coupon);
@@ -111,7 +118,15 @@ public class CompanyService extends ClientServices {
         return listByPrice;
     }
 
+    public boolean isTitleExists(String title) {
+                long isExists= this.currentCompany.getCoupons().stream()
+                .filter(coupon->coupon.getTitle().toLowerCase().equals(title.toLowerCase())).count();
 
+
+        return isExists > 0;
+
+
+    }
     public Company companyDetails() {
         return currentCompany;
     }

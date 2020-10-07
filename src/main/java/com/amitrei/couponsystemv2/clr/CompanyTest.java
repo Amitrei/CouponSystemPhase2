@@ -230,7 +230,6 @@ catch (AlreadyExistsException e) {
 
 
 
-
         at = new AsciiTable();
         at.getContext().setWidth(200).setFrameLeftMargin(20);
         at.addRule();

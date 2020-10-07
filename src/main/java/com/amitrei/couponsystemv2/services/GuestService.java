@@ -21,6 +21,8 @@ public class GuestService {
     public List<Coupon> getAllCoupons() {
         return couponRepo.findAll();
     }
+
+    public Coupon getSingleCoupon(int couponID) { return couponRepo.getOne(couponID);}
 }
 
 

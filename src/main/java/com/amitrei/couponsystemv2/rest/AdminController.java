@@ -56,7 +56,7 @@ public class AdminController extends ClientController {
             try {
 
                 adminService.addCompany(company);
-                return new ResponseEntity<>(HttpStatus.CREATED);
+                return new ResponseEntity<Company>(company,HttpStatus.CREATED);
 
             } catch (AlreadyExistsException e) {
                 return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -91,8 +91,9 @@ public class AdminController extends ClientController {
         if (jwtUtill.validateToken(token, "admin@admin.com", this.clientType)) {
 
             try {
+                Company deletedCompany=adminService.getOneCompany(companyID);
                 adminService.deleteCompany(companyID);
-                return new ResponseEntity<Integer>(companyID, HttpStatus.ACCEPTED);
+                return new ResponseEntity<Company>(deletedCompany, HttpStatus.ACCEPTED);
             } catch (DoesNotExistsException e) {
                 return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
             }
@@ -118,11 +119,46 @@ public class AdminController extends ClientController {
         if (jwtUtill.validateToken(token, "admin@admin.com", this.clientType)) {
 
             Company company = adminService.getOneCompany(companyID);
+            List<Coupon> companyCoupons= company.getCoupons();
+            companyCoupons.forEach(coupon -> coupon.setCompanyName(company.getName()));
+            company.setCoupons(companyCoupons);
             return new ResponseEntity<Company>(company, HttpStatus.ACCEPTED);
         }
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
     }
+
+    @GetMapping("companies/by-name/{companyName}")
+
+    public ResponseEntity<?> isCompanyExistsByName(@RequestHeader(name = "authorization") String token, @PathVariable String companyName) {
+        if (jwtUtill.validateToken(token, "admin@admin.com", this.clientType)) {
+            if(adminService.companyExistsByName(companyName)) {
+                return new ResponseEntity<Boolean>(true, HttpStatus.ACCEPTED);
+            }
+
+            else{
+                return new ResponseEntity<Boolean>(false, HttpStatus.ACCEPTED);
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
+    }
+
+    @GetMapping("companies/by-email/{email}")
+    public ResponseEntity<?> isCompanyExistsByEmail(@RequestHeader(name = "authorization") String token, @PathVariable String email) {
+        if (jwtUtill.validateToken(token, "admin@admin.com", this.clientType)) {
+            if(adminService.companyExistsByEmail(email)) {
+                return new ResponseEntity<Boolean>(true, HttpStatus.ACCEPTED);
+            }
+
+            else{
+                return new ResponseEntity<Boolean>(false, HttpStatus.ACCEPTED);
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
+    }
+
 
 
     @PostMapping("customers/add")
@@ -139,6 +175,8 @@ public class AdminController extends ClientController {
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
     }
+
+
 
 
     @DeleteMapping("customers/delete/{customerID}")
@@ -163,6 +201,7 @@ public class AdminController extends ClientController {
 
     }
 
+
     @GetMapping("customers")
     public ResponseEntity<?> getAllCustomers(@RequestHeader(name = "authorization") String token) {
         if (jwtUtill.validateToken(token, "admin@admin.com", this.clientType)) {
@@ -171,11 +210,29 @@ public class AdminController extends ClientController {
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
     }
+    @GetMapping("customers/by-email/{email}")
+    public ResponseEntity<?> customerExistsByEmail(@RequestHeader(name = "authorization") String token , @PathVariable String email) {
+        if (jwtUtill.validateToken(token, "admin@admin.com", this.clientType)) {
+
+            if (adminService.customerExistsByEmail(email))
+            return new ResponseEntity<Boolean>(true, HttpStatus.ACCEPTED);
+
+            else
+                return new ResponseEntity<Boolean>(false, HttpStatus.ACCEPTED);
+
+        }
+
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
+    }
 
     @GetMapping("customers/{customerID}")
     public ResponseEntity<?> getOneCustomer(@RequestHeader(name = "authorization") String token,@PathVariable int customerID) {
         if (jwtUtill.validateToken(token, "admin@admin.com", this.clientType)) {
             Customer customer = adminService.getOneCustomer(customerID);
+            List<Coupon> customerCoupons=customer.getCoupons();
+            customerCoupons.forEach(coupon -> coupon.setCompanyName(coupon.getCompany().getName()));
+            customer.setCoupons(customerCoupons);
             return new ResponseEntity<Customer>(customer, HttpStatus.ACCEPTED);
         }
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);

@@ -108,9 +108,14 @@ public class AdminService extends ClientServices {
 
     }
 
+    public Boolean companyExistsByName(String companyName){
+        return this.companyRepo.existsByName(companyName);
+    }
     public List<Customer> getAllCustomers() {
         return customerRepo.findAll();
     }
+    public Boolean companyExistsByEmail(String email){return this.companyRepo.existsByEmail(email);}
+    public boolean customerExistsByEmail(String email){ return this.customerRepo.existsByEmail(email);}
 
 
     public Customer getOneCustomer(int customerId) {

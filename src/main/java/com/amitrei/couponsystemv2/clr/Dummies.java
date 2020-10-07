@@ -51,7 +51,6 @@ public class Dummies implements CommandLineRunner {
             Customer customer = Customer.builder().firstName("Simha").lastName("Reef").password("1234").email("Simha-Reef@gmail.com").coupons(new ArrayList<>()).build();
             Customer customer2 = Customer.builder().firstName("Amit").lastName("Reinich").password("1234").email("Amitrein@gmail.com").coupons(new ArrayList<>()).build();
             Customer customer3 = Customer.builder().firstName("Avi").lastName("Ron").password("1234").email("AviRon@gmail.com").coupons(new ArrayList<>()).build();
-            Customer customer4 = Customer.builder().firstName("Simha").lastName("Reef").password("1234").email("Simha-Reef@gmail.com").coupons(new ArrayList<>()).build();
 
 
         Coupon coupon = Coupon.builder().title("New Cola Grapes!").image("coca-cola").price(15).description("Best taste for the cheapest price")
@@ -133,8 +132,9 @@ public class Dummies implements CommandLineRunner {
                 .build();
 
 
+
             companyRepo.saveAll(Arrays.asList(company,company2,company3,company4,company5,company6,company7,company8,company9,company10));
-            customerRepo.saveAll(Arrays.asList(customer,customer2,customer3,customer4));
+            customerRepo.saveAll(Arrays.asList(customer,customer2,customer3));
             couponRepo.saveAll(Arrays.asList(coupon,coupon2,coupon3,coupon4,coupon5,coupon6,coupon7,coupon8,coupon9,coupon10));
 
             customerService.login("Amitrein@gmail.com","1234");
