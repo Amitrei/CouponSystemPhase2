@@ -89,4 +89,8 @@ public class LoginManager {
         }
 
     }
+
+    public Boolean logout(String token){
+        return tokenManager.deleteToken(token);
+    }
 }
