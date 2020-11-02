@@ -27,14 +27,14 @@ public class CustomerService extends ClientServices {
 
 
         if (!customerRepo.existsByEmail(email))
-            throw new IllegalActionException("Incorrect email address");
+            throw new IllegalActionException("Incorrect login details please try again");
 
 
         Customer customer = customerRepo.findByEmail(email);
 
 
             if (!customer.getPassword().equals(password))
-                throw new IllegalActionException("Incorrect password");
+                throw new IllegalActionException("Incorrect login details please try again");
 
 
         this.currentCustomer = customer;

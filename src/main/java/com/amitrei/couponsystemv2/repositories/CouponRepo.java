@@ -28,6 +28,12 @@ public interface CouponRepo extends JpaRepository<Coupon,Integer> {
     @Query(value = "SELECT * FROM customer_vs_coupons",nativeQuery = true)
     Map<Integer,Integer> allPurchases();
 
+    @Query(value = "SELECT COUNT(*) FROM customer_vs_coupons WHERE coupons_id=:couponID",nativeQuery = true)
+    int allPurchasesOfCoupon(@Param("couponID") int couponID);
+
+
+
+
 
     @Transactional
     @Modifying

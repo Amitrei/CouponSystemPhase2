@@ -6,10 +6,13 @@ import com.amitrei.couponsystemv2.utils.JwtUtil;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 @Component
 @Data
@@ -36,6 +39,19 @@ public class TokenManager {
         return this.tokens.remove(token) != null;
     }
 
+
+
+    @Scheduled(fixedRate = 1000*60*30)
+    public void deleteExpiredTokens(){
+        Iterator<Entry<String,ClientServices>> iterator = tokens.entrySet().iterator();
+        while(iterator.hasNext()){
+            Entry<String,ClientServices> entry = iterator.next();
+            if(jwtUtil.isTokenExpired(entry.getKey()))
+                iterator.remove();
+
+
+        }
+}
 
     public ClientServices getClientService(String token) {
         return tokens.get(token.substring(7));

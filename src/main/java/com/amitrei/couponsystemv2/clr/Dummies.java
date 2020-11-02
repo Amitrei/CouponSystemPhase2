@@ -62,7 +62,7 @@ public class Dummies implements CommandLineRunner {
                 .build();
 
         Coupon coupon2 = Coupon.builder().title("McAmerica").image("mcdonalds").price(45).description("enjoy the perfect burger on the planet")
-                .start_date(dateUtil.currentDate())
+                .start_date(dateUtil.setDate(18,10,2020))
                 .end_date(dateUtil.expiredDateFromToday(10))
                 .category(Category.FOOD)
                 .company(company2)

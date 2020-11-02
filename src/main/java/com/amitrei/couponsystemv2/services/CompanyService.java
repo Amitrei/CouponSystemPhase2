@@ -25,13 +25,13 @@ public class CompanyService extends ClientServices {
 
 
         if (!companyRepo.existsByEmail(email)) {
-            throw new IllegalActionException("Incorrect email address");
+            throw new IllegalActionException("Incorrect login details please try again");
         }
 
         Company company = companyRepo.findByEmail(email);
 
          if (!company.getPassword().equals(password))
-            throw new IllegalActionException("Incorrect password");
+            throw new IllegalActionException("Incorrect login details please try again");
 
 
         this.currentCompany = company;
@@ -126,6 +126,17 @@ public class CompanyService extends ClientServices {
         return isExists > 0;
 
 
+    }
+
+    public int getTotalPurchases() {
+        int sumOfPurchases=0;
+        for(Coupon coupon : currentCompany.getCoupons()) {
+            System.out.println(coupon);
+            System.out.println(couponRepo.allPurchasesOfCoupon(coupon.getId()));
+           sumOfPurchases+= couponRepo.allPurchasesOfCoupon(coupon.getId());
+        }
+
+        return sumOfPurchases;
     }
     public Company companyDetails() {
         return currentCompany;

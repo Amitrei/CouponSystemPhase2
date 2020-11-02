@@ -26,8 +26,8 @@ public class AdminService extends ClientServices {
     @Override
     public boolean login(String email, String password) throws IllegalActionException {
 
-        if(!email.equals(ADMIN_EMAIL)) throw new IllegalActionException("Incorrect email address");
-        if(!password.equals(ADMIN_PASSWORD)) throw new IllegalActionException("Incorrect password");
+        if(!email.equals(ADMIN_EMAIL)) throw new IllegalActionException("Incorrect login details please try again");
+        if(!password.equals(ADMIN_PASSWORD)) throw new IllegalActionException("Incorrect login details please try again");
 
         return true;
     }

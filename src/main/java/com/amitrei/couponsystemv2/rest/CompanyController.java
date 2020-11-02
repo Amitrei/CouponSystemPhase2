@@ -114,6 +114,15 @@ public class CompanyController extends ClientController {
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
+    @GetMapping("coupons/total-purchases")
+    public ResponseEntity<?> getTotalPurchases(@RequestHeader(name = "authorization") String token) {
+        if (tokenManager.isTokenValid(token)) {
+            return new ResponseEntity<Integer>(((CompanyService) tokenManager.getClientService(token)).getTotalPurchases(), HttpStatus.ACCEPTED);
+        }
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    }
+
+
 
     @GetMapping("coupons/by-category/{category}")
     public ResponseEntity<?> getCompanyCoupons(@RequestHeader(name = "authorization") String token, @PathVariable Category category) {
