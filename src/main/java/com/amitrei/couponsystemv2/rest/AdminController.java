@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("administrator")
-@CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
+@CrossOrigin(origins = "https://couponim-web.herokuapp.com", allowedHeaders = "*")
 public class AdminController extends ClientController {
 
 

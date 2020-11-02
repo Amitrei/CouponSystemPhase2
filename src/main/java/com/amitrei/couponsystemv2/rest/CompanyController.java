@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("company")
-@CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
+@CrossOrigin(origins = "https://couponim-web.herokuapp.com", allowedHeaders = "*")
 
 
 public class CompanyController extends ClientController {
