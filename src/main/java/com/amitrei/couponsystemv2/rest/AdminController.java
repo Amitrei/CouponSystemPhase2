@@ -241,7 +241,6 @@ public class AdminController extends ClientController {
 
     @GetMapping("coupons")
     public ResponseEntity<?> getAllCoupons(@RequestHeader(name = "authorization") String token) {
-        System.out.println(token + "token from header");
         if (jwtUtill.validateToken(token, "admin@admin.com", this.clientType)) {
 
             List<Coupon> allCoupons = adminService.getAllCoupons();
