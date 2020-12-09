@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -31,12 +31,13 @@ public class CompanyController extends ClientController {
     @Autowired
     private TokenManager tokenManager;
 
+
     @Override
     @PostMapping("login")
     public ResponseEntity<?> login(@RequestBody AuthRequest authRequest) {
         try {
 
-            String token=loginManager.restLogin(authRequest.getEmail(), authRequest.getPassword(),
+            String token = loginManager.restLogin(authRequest.getEmail(), authRequest.getPassword(),
                     ClientType.Company);
             return new ResponseEntity<AuthResponse>(new AuthResponse(token), HttpStatus.ACCEPTED);
 
@@ -47,109 +48,83 @@ public class CompanyController extends ClientController {
 
 
     @PostMapping("coupons/add")
-    public ResponseEntity<?> addCoupon(@RequestHeader(name = "authorization") String token, @RequestBody Coupon coupon) {
+    public ResponseEntity<?> addCoupon(@RequestBody Coupon coupon) {
 
-        if (tokenManager.isTokenValid(token)) {
-            Coupon addedCoupon = coupon;
-            coupon.setCompany( ((CompanyService) tokenManager.getClientService(token)).companyDetails());
-            coupon.setCompanyName(coupon.getCompany().getName());
-            try {
-                ((CompanyService) tokenManager.getClientService(token)).addCoupon(coupon);
-                return new ResponseEntity<Coupon>(coupon, HttpStatus.CREATED);
-            } catch (AlreadyExistsException e) {
-                return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
-            }
+        Coupon addedCoupon = coupon;
+        coupon.setCompany(((CompanyService) tokenManager.getClientService(getToken())).companyDetails());
+        coupon.setCompanyName(coupon.getCompany().getName());
+        try {
+            ((CompanyService) tokenManager.getClientService(getToken())).addCoupon(coupon);
+            return new ResponseEntity<Coupon>(coupon, HttpStatus.CREATED);
+        } catch (AlreadyExistsException e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
 
     @PutMapping("coupons/update")
-    public ResponseEntity<?> updateCoupon(@RequestHeader(name = "authorization") String token, @RequestBody Coupon coupon) {
-        if (tokenManager.isTokenValid(token)) {
+    public ResponseEntity<?> updateCoupon(@RequestBody Coupon coupon) {
 
-            System.out.println(coupon);
-            try {
-                ((CompanyService) tokenManager.getClientService(token)).updateCoupon(coupon);
-                return new ResponseEntity<Coupon>(coupon, HttpStatus.CREATED);
+        System.out.println(coupon);
+        try {
+            ((CompanyService) tokenManager.getClientService(getToken())).updateCoupon(coupon);
+            return new ResponseEntity<Coupon>(coupon, HttpStatus.CREATED);
 
-            } catch (Exception e) {
-                return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
-            }
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
     @DeleteMapping("coupons/delete/{couponID}")
-    public ResponseEntity<?> deleteCoupon(@RequestHeader(name = "authorization") String token, @PathVariable int couponID) {
-        if (tokenManager.isTokenValid(token)) {
-            ((CompanyService) tokenManager.getClientService(token)).deleteCoupon(couponID);
-            return new ResponseEntity<Integer>(couponID, HttpStatus.ACCEPTED);
-        }
-        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<?> deleteCoupon(@PathVariable int couponID) {
+        ((CompanyService) tokenManager.getClientService(getToken())).deleteCoupon(couponID);
+        return new ResponseEntity<Integer>(couponID, HttpStatus.ACCEPTED);
     }
 
 
     @GetMapping("coupons")
-    public ResponseEntity<?> getCompanyCoupons(@RequestHeader(name = "authorization") String token) {
-        if (tokenManager.isTokenValid(token)) {
+    public ResponseEntity<?> getCompanyCoupons() {
 
-            List<Coupon> companyCoupons = ((CompanyService) tokenManager.getClientService(token)).getCompanyCoupons();
-            companyCoupons.forEach(coupon -> coupon.setCompanyName(coupon.getCompany().getName()));
-            companyCoupons.forEach(coupon -> coupon.setIdOfCompany(coupon.getCompany().getId()));
+        List<Coupon> companyCoupons = ((CompanyService) tokenManager.getClientService(getToken())).getCompanyCoupons();
+        companyCoupons.forEach(coupon -> coupon.setCompanyName(coupon.getCompany().getName()));
+        companyCoupons.forEach(coupon -> coupon.setIdOfCompany(coupon.getCompany().getId()));
 
 
-            return new ResponseEntity<List<Coupon>>(companyCoupons, HttpStatus.ACCEPTED);
-        }
-        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<List<Coupon>>(companyCoupons, HttpStatus.ACCEPTED);
     }
 
 
     @GetMapping("coupons/by-title/{title}")
-    public ResponseEntity<?> isCouponExistsByTitle(@RequestHeader(name = "authorization") String token,@PathVariable String title) {
-        if (tokenManager.isTokenValid(token)) {
-              return new ResponseEntity<Boolean>(((CompanyService) tokenManager.getClientService(token)).isTitleExists(title), HttpStatus.ACCEPTED);
-        }
-        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<?> isCouponExistsByTitle(@PathVariable String title) {
+        return new ResponseEntity<Boolean>(((CompanyService) tokenManager.getClientService(getToken())).isTitleExists(title), HttpStatus.ACCEPTED);
     }
 
     @GetMapping("coupons/total-purchases")
-    public ResponseEntity<?> getTotalPurchases(@RequestHeader(name = "authorization") String token) {
-        if (tokenManager.isTokenValid(token)) {
-            return new ResponseEntity<Integer>(((CompanyService) tokenManager.getClientService(token)).getTotalPurchases(), HttpStatus.ACCEPTED);
-        }
-        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<?> getTotalPurchases() {
+        return new ResponseEntity<Integer>(((CompanyService) tokenManager.getClientService(getToken())).getTotalPurchases(), HttpStatus.ACCEPTED);
     }
 
 
-
     @GetMapping("coupons/by-category/{category}")
-    public ResponseEntity<?> getCompanyCoupons(@RequestHeader(name = "authorization") String token, @PathVariable Category category) {
-        if (tokenManager.isTokenValid(token))
-            return new ResponseEntity<List<Coupon>>(((CompanyService) tokenManager.getClientService(token)).getCompanyCoupons(category), HttpStatus.ACCEPTED);
+    public ResponseEntity<?> getCompanyCoupons(@PathVariable Category category) {
+        return new ResponseEntity<List<Coupon>>(((CompanyService) tokenManager.getClientService(getToken())).getCompanyCoupons(category), HttpStatus.ACCEPTED);
 
-        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
 
     @GetMapping("coupons/{amount}")
-    public ResponseEntity<?> getCompanyCoupons(@RequestHeader(name = "authorization") String token, @PathVariable double amount) {
-        if (tokenManager.isTokenValid(token))
-            return new ResponseEntity<List<Coupon>>(((CompanyService) tokenManager.getClientService(token)).getCompanyCoupons(amount), HttpStatus.ACCEPTED);
+    public ResponseEntity<?> getCompanyCoupons(@PathVariable double amount) {
+        return new ResponseEntity<List<Coupon>>(((CompanyService) tokenManager.getClientService(getToken())).getCompanyCoupons(amount), HttpStatus.ACCEPTED);
 
 
-        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
     @GetMapping("company-details")
 
-    public ResponseEntity<?> getCompanyDetails(@RequestHeader(name = "authorization") String token) {
-        if (tokenManager.isTokenValid(token)) {
-            return new ResponseEntity<Company>(((CompanyService) tokenManager.getClientService(token)).companyDetails(), HttpStatus.ACCEPTED);
-        }
+    public ResponseEntity<?> getCompanyDetails() {
+        return new ResponseEntity<Company>(((CompanyService) tokenManager.getClientService(getToken())).companyDetails(), HttpStatus.ACCEPTED);
 
-        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
 

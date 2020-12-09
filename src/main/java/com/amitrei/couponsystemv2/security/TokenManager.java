@@ -15,11 +15,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 @Component
-@Data
 public class TokenManager {
 
     @Autowired
     private JwtUtil jwtUtil;
+
+
     private Map<String, ClientServices> tokens = new HashMap<>();
 
 
@@ -33,6 +34,7 @@ public class TokenManager {
         token = token.substring(7);
         return ((!jwtUtil.isTokenExpired(token)) && (tokens.containsKey(token)));
     }
+
 
 
     public boolean deleteToken(String token) {

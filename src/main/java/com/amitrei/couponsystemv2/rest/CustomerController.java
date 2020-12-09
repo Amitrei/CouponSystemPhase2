@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -42,78 +41,58 @@ public class CustomerController extends ClientController {
 
 
     @PostMapping("purchase-coupon")
-    public ResponseEntity<?> purchaseCoupon(@RequestHeader(name = "authorization") String token, @RequestBody Coupon coupon) {
-        if (tokenManager.isTokenValid(token)) {
-            try {
-                ((CustomerService) tokenManager.getClientService(token)).purchaseCoupon(coupon);
-                System.out.println(((CustomerService) tokenManager.getClientService(token)).getCustomerCoupons());
+    public ResponseEntity<?> purchaseCoupon(@RequestBody Coupon coupon) {
+        try {
+            ((CustomerService) tokenManager.getClientService(getToken())).purchaseCoupon(coupon);
+            System.out.println(((CustomerService) tokenManager.getClientService(getToken())).getCustomerCoupons());
 
-                return new ResponseEntity<Coupon>(coupon, HttpStatus.ACCEPTED);
-            } catch (IllegalActionException e) {
-                return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
-            }
-
-
+            return new ResponseEntity<Coupon>(coupon, HttpStatus.ACCEPTED);
+        } catch (IllegalActionException e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
+
     }
 
     @GetMapping("coupons")
-    public ResponseEntity<?> getCustomerCoupons(@RequestHeader(name = "authorization") String token) {
-        if (tokenManager.isTokenValid(token)) {
-            List<Coupon> customerCoupons = ((CustomerService) tokenManager.getClientService(token)).getCustomerCoupons();
-            customerCoupons.forEach(coupon -> coupon.setCompanyName(coupon.getCompany().getName()));
-            customerCoupons.forEach(coupon -> coupon.setIdOfCompany(coupon.getCompany().getId()));
-            System.out.println(customerCoupons);
-            return new ResponseEntity<List<Coupon>>(customerCoupons, HttpStatus.ACCEPTED);
+    public ResponseEntity<?> getCustomerCoupons() {
+        List<Coupon> customerCoupons = ((CustomerService) tokenManager.getClientService(getToken())).getCustomerCoupons();
+        customerCoupons.forEach(coupon -> coupon.setCompanyName(coupon.getCompany().getName()));
+        customerCoupons.forEach(coupon -> coupon.setIdOfCompany(coupon.getCompany().getId()));
+        System.out.println(customerCoupons);
+        return new ResponseEntity<List<Coupon>>(customerCoupons, HttpStatus.ACCEPTED);
 
-        }
-        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
 
     @GetMapping("coupons/is-owned/{couponID}")
-    public ResponseEntity<?> isCouponOwned(@RequestHeader(name = "authorization") String token,@PathVariable int couponID) {
-        if (tokenManager.isTokenValid(token)) {
-            return new ResponseEntity<Boolean>(((CustomerService) tokenManager.getClientService(token)).isOwnCoupon(couponID), HttpStatus.ACCEPTED);
-        }
-        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<?> isCouponOwned(@PathVariable int couponID) {
+        return new ResponseEntity<Boolean>(((CustomerService) tokenManager.getClientService(getToken())).isOwnCoupon(couponID), HttpStatus.ACCEPTED);
 
     }
-
 
 
     @GetMapping("coupons-by-category/{category}")
 
-    public ResponseEntity<?> getCustomerCoupons(@RequestHeader(name = "authorization") String token, @PathVariable  Category category) {
-        if (tokenManager.isTokenValid(token)) {
-            List<Coupon> customerCoupons = ((CustomerService) tokenManager.getClientService(token)).getCustomerCoupons(category);
-            return new ResponseEntity<List<Coupon>>(customerCoupons, HttpStatus.ACCEPTED);
+    public ResponseEntity<?> getCustomerCoupons(@PathVariable Category category) {
+        List<Coupon> customerCoupons = ((CustomerService) tokenManager.getClientService(getToken())).getCustomerCoupons(category);
+        return new ResponseEntity<List<Coupon>>(customerCoupons, HttpStatus.ACCEPTED);
 
-        }
-        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
-
 
 
     @GetMapping("coupons/{maxPrice}")
-    public ResponseEntity<?> getCustomerCoupons(@RequestHeader(name = "authorization") String token, @PathVariable  Double maxPrice) {
-        if (tokenManager.isTokenValid(token)) {
-            List<Coupon> customerCoupons = ((CustomerService) tokenManager.getClientService(token)).getCustomerCoupons(maxPrice);
-            return new ResponseEntity<List<Coupon>>(customerCoupons, HttpStatus.ACCEPTED);
+    public ResponseEntity<?> getCustomerCoupons(@PathVariable Double maxPrice) {
+        List<Coupon> customerCoupons = ((CustomerService) tokenManager.getClientService(getToken())).getCustomerCoupons(maxPrice);
+        return new ResponseEntity<List<Coupon>>(customerCoupons, HttpStatus.ACCEPTED);
 
-        }
-        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
     @GetMapping("details")
-    public ResponseEntity<?> getCustomerDetails(@RequestHeader(name = "authorization") String token) {
-        if (tokenManager.isTokenValid(token)) {
-            Customer currentCustomer = ((CustomerService) tokenManager.getClientService(token)).getCustomerDetails();
-            return new ResponseEntity<Customer>(currentCustomer, HttpStatus.ACCEPTED);
+    public ResponseEntity<?> getCustomerDetails() {
+        Customer currentCustomer = ((CustomerService) tokenManager.getClientService(getToken())).getCustomerDetails();
+        return new ResponseEntity<Customer>(currentCustomer, HttpStatus.ACCEPTED);
 
-        }
-        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
 }
