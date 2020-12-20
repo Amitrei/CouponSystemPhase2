@@ -1,6 +1,6 @@
 # <h1 align="center">Coupon System</h1>
 <p align="center">
-<img src="https://amit-rei.io/assets/couponim-github2.png" align="center">
+<img src="https://amit-rei.io/assets/couponim-gixthub2.png" align="center">
 </p>
 
 ## The live project
